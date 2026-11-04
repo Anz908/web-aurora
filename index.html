@@ -1739,7 +1739,7 @@ mbl=0;const l2=$('mzMore');if(l2)l2.classList.remove('on');setTimeout(chkMore,25
 function chkMore(){if(S.pg!='home'||!sec.classList.contains('on')||mbl)return;const el=$('mzMore');if(!el)return;if(el.getBoundingClientRect().top<innerHeight+900)moreBot()}
 let mq=0;addEventListener('scroll',()=>{if(mq)return;mq=requestAnimationFrame(()=>{mq=0;chkMore()})},{passive:true});
 /* ===== pemutar ===== */
-function lay(){const on=sec.classList.contains('on'),has=!!S.song,open=np.classList.contains('on'),cl=!!S.cl&&S.pg!='cari';mini.classList.toggle('on',on&&!open&&!cl);mini.classList.toggle('em',!has);br.classList.toggle('cl',cl);br.classList.toggle('ns',!has);br.classList.toggle('sr',S.pg=='cari')}
+function lay(){const on=sec.classList.contains('on'),has=!!S.song,open=np.classList.contains('on'),cl=!!S.cl&&S.pg!='cari';mini.classList.toggle('on',on&&!open&&!cl);mini.classList.toggle('em',!has);br.classList.toggle('cl',cl);br.classList.toggle('ns',!has);br.classList.toggle('sr',S.pg=='cari');requestAnimationFrame(()=>{try{tab()}catch(e){}})}
 const ico=()=>{const h=A.paused?I.play:I.pause;$('mzMp').innerHTML=$('mzPp').innerHTML=$('mzMq').innerHTML=h;np.classList.toggle('pl',!A.paused);lay();document.querySelectorAll('.mzRow.cur').forEach(r=>r.classList.toggle('pl',!A.paused))};
 function dom(u,cb){const m=new Image();m.crossOrigin='anonymous';m.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d');x.drawImage(m,0,0,16,16);const d=x.getImageData(0,0,16,16).data;let r=0,g=0,b=0,n=0;for(let i=0;i<d.length;i+=4){const w=Math.max(d[i],d[i+1],d[i+2])-Math.min(d[i],d[i+1],d[i+2])+12;r+=d[i]*w;g+=d[i+1]*w;b+=d[i+2]*w;n+=w}r/=n;g/=n;b/=n;const k=Math.min(1,200/Math.max(r,g,b,1));cb('rgb('+(r*k|0)+','+(g*k|0)+','+(b*k|0)+')')}catch(e){cb(null)}};m.onerror=()=>cb(null);m.src=u}
 function fill(s){const u=art(s,600);$('mzCi').style.display=u?'':'none';$('mzCi').src=u;$('mzSa').src=art(s,200);$('mzMa').src=$('mzMb').src=art(s,200);$('mzT').textContent=$('mzMt').textContent=$('mzMu2').textContent=s.t;$('mzA').textContent=(s.a||'')+(s.al&&s.al!='Audius'?' • '+s.al:'');$('mzMs').textContent=$('mzMv').textContent=s.a||'';$('mzFl').style.width='0';$('mzC').textContent='0:00';$('mzD').textContent=s.au?fmt(s.dur||(s.full?0:30)):'-:--';$('mzSc').scrollTop=0;S.off=0;offUi();$('mzFv').innerHTML=isF(s)?I.chkc:I.plusc;
@@ -1764,25 +1764,95 @@ h('seekto',e=>{if(e&&isFinite(e.seekTime)){if(e.fastSeek&&A.fastSeek)A.fastSeek(
 ['loadedmetadata','durationchange','seeked','ratechange','play','pause'].forEach(n=>A.addEventListener(n,msPos));
 window.mzMediaSession={meta:msMeta,pos:msPos,state:msState}}
 function msess(s){msMeta(s);msState();msPos()}
-async function upg(s){if(s.full||!s.t)return;const tok=S.tok;
+
+/* ===== AURORA FULL: sumber lagu penuh tanpa API key (JioSaavn mirror) ===== */
+const SVH=['https://saavn.dev/api','https://jiosaavn-api-privatecvc2.vercel.app','https://saavn.me','https://jiosaavn-api-2-harsh-patel.vercel.app'];
+const svQ=x=>String(x||'').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&#039;/g,"'");
+async function svSearch(q,tok){
+  for(const h of SVH){
+    try{
+      const r=await jf(h+'/search/songs?query='+encodeURIComponent(q)+'&limit=12',6500);
+      const L=(r&&r.data&&(r.data.results||r.data))||[];
+      if(Array.isArray(L)&&L.length)return L;
+    }catch(e){}
+    if(tok!==S.tok)return null;
+  }
+  return null;
+}
+function svUrl(x){
+  const d=x.downloadUrl||[];if(!d.length)return '';
+  const pr=['320kbps','160kbps','96kbps','48kbps','12kbps'];
+  for(const q of pr){const m=d.find(v=>v.quality===q);if(m)return m.url||m.link||''}
+  const l=d[d.length-1];return l.url||l.link||'';
+}
+function svArtists(x){
+  const a=x.artists&&(x.artists.primary||x.artists.all)||[];
+  if(Array.isArray(a)&&a.length)return a.map(v=>v.name).join(' ');
+  return x.primaryArtists||x.singers||'';
+}
+async function svFind(s,tok){
+  const qs=[s.t+' '+(s.a||''),s.t];
+  for(const q of qs){
+    const L=await svSearch(q,tok);
+    if(tok!==S.tok||S.song!==s)return null;
+    if(!L)continue;
+    const t0=nzs(s.t);
+    const c=L.map(x=>{
+      const nm=nzs(svQ(x.name||x.title)),ar=svArtists(x),du=+x.duration||0,u=svUrl(x);
+      if(!u||!nm)return null;
+      let p=nm==t0?4:(nm.includes(t0)||t0.includes(nm))?2:-1;
+      if(p<0)return null;
+      if(s.a&&ar&&amatch(s.a,svQ(ar)))p+=3;else if(s.a&&ar)p-=1;
+      if(s.dur&&du){const d=Math.abs(du-s.dur);if(d>25)return null;p+=d<4?3:d<10?1:0}
+      if(/(karaoke|instrumental|cover|remix|slowed|sped|lofi|8d)/i.test(svQ(x.name||x.title))&&!/(karaoke|instrumental|cover|remix|slowed|sped|lofi|8d)/i.test(s.t))p-=3;
+      return{x,u,du,p};
+    }).filter(m=>m&&m.p>=4).sort((a,b)=>b.p-a.p)[0];
+    if(c)return c;
+  }
+  return null;
+}
+async function svUpg(s,tok){
+  const c=await svFind(s,tok);
+  if(!c||tok!==S.tok||S.song!==s)return false;
+  const was=!A.paused,pos=0;
+  S.sk=0;
+  s.au=c.u.replace(/^http:/,'https:');s.full=1;s.dur=c.du||s.dur;
+  A.src=s.au;
+  if(was||!A.getAttribute('src'))A.play().catch(()=>0);
+  tt('Memutar lagu full \u2713');
+  lyr(s);
+  return true;
+}
+async function upg(s){const tok0=S.tok;await upg0(s);if(!s.full&&!s.loc&&S.song===s&&tok0===S.tok&&s.au&&!A.getAttribute('src')){A.src=s.au;A.play().catch(()=>0);tt('Versi full belum ketemu, memutar cuplikan 30 dtk')}}
+async function upg0(s){if(s.full||!s.t)return;const tok=S.tok;
+if(window.azYtOn&&!s.loc){if(window.azYtOn()){const y=await window.azYtFind(s);if(tok!==S.tok||S.song!==s)return;if(y){s.au='yt:'+y.id;s.full=1;s.yt=1;s.dur=s.dur||y.dur;A.src=s.au;A.play().catch(()=>0);tt('Memutar lagu full dari YouTube');lyr(s);return}}else if(!window.__azYtTip){window.__azYtTip=1;tt('Pasang API key YouTube di Pengaturan supaya lagu diputar full')}}
+if(await svUpg(s,tok))return;
 try{let r=await jf('https://api.audius.co/v1/tracks/search?app_name=ALLTOOLS&limit=10&query='+encodeURIComponent(s.t+' '+(s.a||'')),7000);if(tok!==S.tok||S.song!==s)return;if(!(r.data||[]).some(x=>amatch(s.a,x.user&&x.user.name))){try{r=await jf('https://api.audius.co/v1/tracks/search?app_name=ALLTOOLS&limit=15&query='+encodeURIComponent(s.t),7000)}catch(e){}if(tok!==S.tok||S.song!==s)return}
-let t0=nzs(s.t),c=(r.data||[]).filter(x=>x.is_streamable!==false&&amatch(s.a,x.user&&x.user.name)).map(x=>{const a=nzs(x.title);let p=a==t0?4:(a.includes(t0)||t0.includes(a))?2:-1;if(p<0)return null;if(s.dur&&x.duration){const d=Math.abs(x.duration-s.dur);if(d>12)return null;p+=d<4?3:1}return{x,p}}).filter(Boolean).sort((m,n)=>n.p-m.p)[0];
+let t0=nzs(s.t),c=(r.data||[]).filter(x=>x.is_streamable!==false&&amatch(s.a,x.user&&x.user.name)).map(x=>{const a=nzs(x.title);let p=a==t0?4:(a.includes(t0)||t0.includes(a))?2:-1;if(p<0)return null;if(s.dur&&x.duration){const d=Math.abs(x.duration-s.dur);if(d>20)return null;p+=d<4?3:1}return{x,p}}).filter(Boolean).sort((m,n)=>n.p-m.p)[0];
 if(!c){const c2=(r.data||[]).filter(x=>x.is_streamable!==false).map(x=>{if(nzs(x.title)!=t0||!s.dur||!x.duration||Math.abs(x.duration-s.dur)>4)return null;return{x,p:1}}).filter(Boolean)[0];if(c2)c=c2}
-if(!c){S.sk=(S.sk||0)+1;if(S.sk<=5&&tgv('an',1)){tt('Versi full tidak ada, lanjut ke lagu berikutnya');step(1)}else tt('Versi full lagu ini belum ada di sumber gratis');return}
+if(!c){tt('Versi full lagu ini belum ketemu');return}
 S.sk=0;
 const was=!A.paused;s.au='https://api.audius.co/v1/tracks/'+c.x.id+'/stream?app_name=ALLTOOLS';s.full=1;s.dur=c.x.duration||s.dur;A.src=s.au;if(was)A.play().catch(()=>0);tt('Memutar versi full');lyr(s)}catch(e){}}
 function play(s){if(s.loc&&!s.au){const m=(S.locs||[]).find(x=>x.loc==s.loc);if(m)s=m}if(same(s)){openNP();if(A.paused&&s.au)A.play().catch(()=>0);return}
-S.song=s;S.tok++;fill(s);sv('nxMzH',[slim(s),...hs().filter(x=>fk(x)!=fk(s))].slice(0,20));if(s.au){A.src=s.au;A.play().catch(()=>0)}else{A.pause();A.removeAttribute('src');A.load()}
+S.song=s;S.tok++;fill(s);sv('nxMzH',[slim(s),...hs().filter(x=>fk(x)!=fk(s))].slice(0,20));if(s.au&&!(window.azYtOn&&window.azYtOn()&&!s.full&&!s.loc)){A.src=s.au;A.play().catch(()=>0)}else{A.pause();A.removeAttribute('src');A.load()}
 ico();openNP();lyr(s);cred(s);S.li=-1;S.nosc=0;msess(s);upg(s)}
 const cands=()=>S.q.filter(x=>x.au);
 function step(d){const L=cands(),i=L.findIndex(same);if(!L.length)return;if(d>0&&window.mzShuf&&L.length>1){let j;do{j=Math.floor(Math.random()*L.length)}while(j==i);return play(L[j])}if(d<0&&A.currentTime>3){A.currentTime=0;return}play(L[(i+d+L.length)%L.length])}
 function tog(){if(!S.song||!S.song.au)return tt('Audio tidak tersedia, buka lewat YouTube atau Spotify');A.paused?A.play().catch(()=>tt('Audio gagal diputar')):A.pause()}
 function openNP(){np.classList.add('on');document.body.classList.add('mzLock');lay()}
 function closeNP(){np.style.transform='';np.classList.remove('on','dr');document.body.classList.remove('mzLock');ico()}
+/* ===== AZFIX: mesin lirik halus ===== */
+const lyB=$('mzLy');let lyAn=0,lyT=0;
+function lyScroll(e,instant){const b=lyB;if(!e||!b||!b.clientHeight)return;const br=b.getBoundingClientRect(),er=e.getBoundingClientRect();const to=Math.max(0,b.scrollTop+(er.top-br.top)-(b.clientHeight*.36-er.height/2));cancelAnimationFrame(lyAn);if(instant){b.scrollTop=to;return}const from=b.scrollTop,dist=to-from;if(Math.abs(dist)<2)return;const t0=performance.now(),D=Math.min(720,360+Math.abs(dist)*.45);const f=n=>{const p=Math.min(1,(n-t0)/D),q=1-Math.pow(1-p,4);b.scrollTop=from+dist*q;if(p<1)lyAn=requestAnimationFrame(f)};lyAn=requestAnimationFrame(f)}
+function lyGo(k,instant){const el=lyB.children;for(let i=0;i<el.length;i++){const e=el[i];if(!e.classList.contains('mzL'))continue;e.style.setProperty('--d',k<0?4:Math.min(Math.abs(i-k),4));e.classList.toggle('on',i==k)}S.li=k;if(k>=0&&!S.nosc)lyScroll(el[k],instant)}
+window.__azLyNow=instant=>{const e=lyB.children[S.li];if(e&&!S.nosc)lyScroll(e,instant)};
+['touchstart','wheel','pointerdown'].forEach(n=>lyB.addEventListener(n,()=>{S.nosc=1;clearTimeout(lyT)},{passive:true}));
+['touchend','pointerup','pointercancel','wheel'].forEach(n=>lyB.addEventListener(n,()=>{clearTimeout(lyT);lyT=setTimeout(()=>{S.nosc=0;window.__azLyNow()},3200)},{passive:true}));
 let raf=0;function tick(){const d=A.duration||(S.song&&S.song.dur)||0,t=A.currentTime||0;if(d){const p=Math.min(100,t/d*100)+'%';if(S.drag!==bar){$('mzFl').style.width=p;$('mzC').textContent=fmt(t)}$('mzD').textContent=fmt(d)}
-if(S.ly){const te=S.pv?(S.pvo==null?-1e9:t+S.pvo+S.off/1e3):t+S.off/1e3;let k=-1;for(let i=0;i<S.ly.length;i++){if(S.ly[i].t<=te+.25)k=i;else break}if(k!=S.li){const el=$('mzLy').children;if(el[S.li])el[S.li].classList.remove('on');S.li=k;if(el[k]){el[k].classList.add('on');if(!S.nosc){const b=$('mzLy');b.scrollTo({top:el[k].offsetTop-b.clientHeight/2+el[k].offsetHeight/2,behavior:'smooth'})}}}}
+if(d){const pb=document.querySelector('.mzMini .azPr b');if(pb)pb.style.transform='scaleX('+Math.min(1,t/d).toFixed(4)+')'}
+if(S.ly){const te=S.pv?(S.pvo==null?null:t+S.pvo+S.off/1e3):t+S.off/1e3;let k=-1;if(te!=null){let lo=0,hi=S.ly.length-1;while(lo<=hi){const m=(lo+hi)>>1;if(S.ly[m].t<=te+.2){k=m;lo=m+1}else hi=m-1}}if(k!=S.li)lyGo(k)}
 raf=A.paused?0:requestAnimationFrame(tick)}
-A.addEventListener('play',()=>{ico();cancelAnimationFrame(raf);raf=requestAnimationFrame(tick)});A.addEventListener('pause',ico);A.addEventListener('loadedmetadata',tick);A.addEventListener('ended',()=>{if(tgv('rep',0)){A.currentTime=0;A.play().catch(()=>0)}else if(tgv('an',1))step(1)});A.addEventListener('error',()=>{if(A.getAttribute('src'))tt('Audio gagal dimuat, coba lagu lain')});
+A.addEventListener('play',()=>{ico();cancelAnimationFrame(raf);raf=requestAnimationFrame(tick)});['seeked','timeupdate','loadedmetadata'].forEach(n=>A.addEventListener(n,()=>{if(A.paused)tick()}));document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!A.paused){cancelAnimationFrame(raf);raf=requestAnimationFrame(tick)}});A.addEventListener('pause',ico);A.addEventListener('loadedmetadata',tick);A.addEventListener('ended',()=>{if(tgv('rep',0)){A.currentTime=0;A.play().catch(()=>0)}else if(tgv('an',1))step(1)});A.addEventListener('error',()=>{if(A.getAttribute('src'))tt('Audio gagal dimuat, coba lagu lain')});
 msInit();window.mzStep=step;
 function sl(el,ok,set,end){const at=x=>{const r=el.getBoundingClientRect();return Math.max(0,Math.min(1,(x-r.left)/r.width))};
 el.addEventListener('pointerdown',e=>{if(!ok())return;el.setPointerCapture(e.pointerId);el.classList.add('d');S.drag=el;set(at(e.clientX))});el.addEventListener('pointermove',e=>{if(S.drag===el)set(at(e.clientX))});
@@ -1797,19 +1867,19 @@ hd.addEventListener('pointermove',e=>{if(!y0)return;dy=Math.max(0,e.clientY-y0);
 /* ===== lirik, offset, pencipta ===== */
 const offUi=()=>{$('mzOv').textContent=(S.off>0?'+':'')+S.off+'ms';$('mzOf').querySelectorAll('[data-st]').forEach(b=>b.classList.toggle('on',b.dataset.st==S.step))};
 const pvMap=()=>{try{return JSON.parse(localStorage.getItem('nxMzPo')||'{}')}catch(e){return{}}},pvLbl=()=>S.pvo==null?'Cuplikan 30 dtk \u2022 ketuk baris yang sedang dinyanyikan untuk menyelaraskan':'Lirik sinkron (cuplikan) \u2022 ketuk baris lain untuk koreksi';
-async function lyr(s){const box=$('mzLy'),tok=S.tok;S.ly=null;S.li=-1;S.pv=0;S.pvo=null;$('mzLt').textContent='';$('mzOb').style.display='none';$('mzOf').classList.remove('on');box.innerHTML='<p class="mzMu">Memuat lirik...</p>';
+async function lyr(s){const box=$('mzLy'),tok=S.tok;S.ly=null;S.li=-1;S.pv=0;S.pvo=null;box.classList.remove('hint');$('mzLt').textContent='';$('mzOb').style.display='none';$('mzOf').classList.remove('on');box.innerHTML='<p class="mzMu">Memuat lirik...</p>';
 if(s.loc&&!tgv('lyl',1))return box.innerHTML='<p class="mzMu">Pencarian lirik online untuk lagu lokal dimatikan.</p>';
 try{let r=await jf('https://lrclib.net/api/search?track_name='+encodeURIComponent(s.t)+'&artist_name='+encodeURIComponent(s.a||''));if(!r.length)r=await jf('https://lrclib.net/api/search?q='+encodeURIComponent(s.t+' '+(s.a||'')));if(tok!==S.tok)return;
 const near=x=>!s.dur||!x.duration||Math.abs(x.duration-s.dur)<8,x=pick(r,s,near);
-if(!x)return box.innerHTML='<p class="mzMu">Lirik tidak ditemukan.</p>';
+if(!x){try{const o=await jf('https://api.lyrics.ovh/v1/'+encodeURIComponent((s.a||'').split(/[,&]/)[0].trim())+'/'+encodeURIComponent(s.t.replace(/\(.*?\)|\[.*?\]/g,'').trim()),8000);if(tok!==S.tok)return;if(o&&o.lyrics&&o.lyrics.trim().length>40){$('mzLt').textContent='Teks lirik lengkap';box.innerHTML='<div class="mzTx">'+E(o.lyrics.replace(/\r/g,'').trim())+'</div>';return}}catch(e2){}return box.innerHTML='<p class="mzMu">Lirik tidak ditemukan.</p>'}
 if(x.syncedLyrics){const L=[];x.syncedLyrics.split('\n').forEach(l=>{const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\](.*)/);if(m&&m[3].trim())L.push({t:m[1]*60+parseFloat(m[2]),x:m[3].trim()})});
-if(L.length>3){const direct=s.full&&near(x);S.ly=L;S.pv=direct?0:1;if(S.pv){const mp=pvMap();S.pvo=mp[fk(s)]!=null?mp[fk(s)]:null}
+L.sort((p,q)=>p.t-q.t);if(L.length>3){const direct=!!(s.full||s.loc)&&near(x);S.ly=L;S.pv=direct?0:1;if(S.pv){const mp=pvMap();S.pvo=mp[fk(s)]!=null?mp[fk(s)]:null}
 $('mzLt').textContent=direct?'Lirik sinkron':pvLbl();$('mzOb').style.display='inline-flex';box.innerHTML=L.map((l,i)=>'<div class="mzL" data-i="'+i+'">'+E(l.x)+'</div>').join('');
-if(S.pv&&S.pvo==null)tt('Ketuk baris lirik yang sedang terdengar untuk menyelaraskan lirik');tick();return}}
+box.classList.toggle('hint',!!(S.pv&&S.pvo==null));if(S.pv&&S.pvo==null)tt('Ini cuplikan 30 dtk. Ketuk baris lirik yang sedang terdengar supaya lirik ikut lagu');tick();return}}
 $('mzLt').textContent=s.full?'Teks lirik':'Teks lirik, tidak sinkron (preview 30 dtk)';box.innerHTML='<div class="mzTx">'+E(x.plainLyrics||String(x.syncedLyrics).replace(/\[[^\]]*\]\s?/g,''))+'</div>'}
 catch(e){if(tok===S.tok)box.innerHTML='<p class="mzMu">Gagal memuat lirik (jaringan).</p>'}}
 function cred(s){const c=$('mc');c.textContent='Mencari data pencipta...';if(typeof msCred==='function')msCred(s);else c.textContent='-'}
-$('mzLy').addEventListener('click',e=>{const l=e.target.closest('.mzL');if(!l||!S.ly||!A.src)return;const ln=S.ly[l.dataset.i];if(S.pv){S.pvo=ln.t-A.currentTime-S.off/1e3;const m=pvMap();m[fk(S.song)]=S.pvo;try{localStorage.setItem('nxMzPo',JSON.stringify(m))}catch(x){}S.li=-1;S.nosc=0;$('mzLt').textContent=pvLbl();tick();tt('Lirik tersinkron \u2713');return}A.currentTime=ln.t;if(A.paused)A.play().catch(()=>0)});
+$('mzLy').addEventListener('click',e=>{const l=e.target.closest('.mzL');if(!l||!S.ly||!A.src)return;const ln=S.ly[l.dataset.i];if(S.pv){S.pvo=ln.t-A.currentTime-S.off/1e3;const m=pvMap();m[fk(S.song)]=S.pvo;try{localStorage.setItem('nxMzPo',JSON.stringify(m))}catch(x){}S.li=-1;S.nosc=0;$('mzLy').classList.remove('hint');$('mzLt').textContent=pvLbl();tick();tt('Lirik tersinkron \u2713');return}A.currentTime=ln.t;if(A.paused)A.play().catch(()=>0)});
 ['touchstart','wheel'].forEach(n=>$('mzLy').addEventListener(n,()=>{S.nosc=1;clearTimeout(S.nt);S.nt=setTimeout(()=>S.nosc=0,3000)},{passive:true}));
 $('mzOb').onclick=()=>$('mzOf').classList.toggle('on');
 $('mzOf').addEventListener('click',e=>{const b=e.target.closest('.mzB');if(!b)return;if(b.dataset.st)S.step=+b.dataset.st;else if(b.dataset.d!=null)S.off=b.dataset.d=='0'?0:S.off+(+b.dataset.d)*S.step;offUi()});
@@ -1841,7 +1911,7 @@ if(nw)nw.animate(push?[{transform:'translateX(100%)',opacity:.35},{transform:'no
 return true}catch(e){}return false};
 const anim=(el,c)=>{el.classList.remove('mzSI','mzSO');void el.offsetWidth;el.classList.add(c)};
 const srt=(L,f)=>{const by=S.sb||'date',dr=S.sd2||'dec';let r=L.slice();if(by=='name'){r.sort((a,b)=>String(f(a)||'').localeCompare(String(f(b)||''),'id'));if(dr=='dec')r.reverse()}else if(dr=='inc')r.reverse();return r};
-const ACT={rec:()=>{sv('nxMzR',[]);tt('Pencarian terakhir dihapus')},his:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus')},fav:()=>{sv('nxMzF',[]);tt('Favorit dihapus')},abt:()=>tt('Aurora v86 • iTunes, Audius, LRCLIB'),shr:()=>navigator.share?navigator.share({title:'Aurora',url:location.href}).catch(()=>0):tt('Bagikan lewat menu browser'),plus:()=>tt('Segera hadir'),clrh:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus');lib()}};
+const ACT={rec:()=>{sv('nxMzR',[]);tt('Pencarian terakhir dihapus')},his:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus')},fav:()=>{sv('nxMzF',[]);tt('Favorit dihapus')},abt:()=>tt('Aurora v89 • YouTube full, Saavn, iTunes, Audius, LRCLIB'),shr:()=>navigator.share?navigator.share({title:'Aurora',url:location.href}).catch(()=>0):tt('Bagikan lewat menu browser'),plus:()=>tt('Segera hadir'),clrh:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus');lib()}};
 ACT.mor=a=>menu(a,[{t:'Hapus pencarian terakhir',fn:()=>ACT.rec()},{t:'Hapus sesi terakhir',fn:()=>{ACT.his();lib()}},{t:'Hapus favorit',fn:()=>{ACT.fav();lib()}}]);
 ACT.flt=a=>{const by=S.sb||'date',dr=S.sd2||'dec';menu(a,[{t:'Name',ck:by=='name',fn:()=>{S.sb='name';lib()}},{t:'Tanggal Ditambahkan',ck:by=='date',fn:()=>{S.sb='date';lib()}},{sep:1},{t:'Increasing',ck:dr=='inc',fn:()=>{S.sd2='inc';lib()}},{t:'Decreasing',ck:dr=='dec',fn:()=>{S.sd2='dec';lib()}}])};
 ACT.prof=a=>menu(a,[{t:uname(),h:1},{t:'Pengaturan',fn:()=>nav('set')},{t:'Kembali ke AllTools',fn:()=>go('t0')}]);
@@ -2128,7 +2198,7 @@ if(bt&&ly){
 const lp=document.createElement('div');lp.className='mzLp mzG';lp.id='mzLp';lp.innerHTML='<div class="mzLph"><b>Lirik</b><span>Lihat penuh ›</span></div><div class="mzLpt" id="mzLpt"></div>';
 bt.parentNode.insertBefore(lp,bt.nextSibling);lp.onclick=()=>{const b=$('mzLb');b&&b.click()};
 const lpv=()=>{const t=$('mzLpt'),L=[...ly.querySelectorAll('.mzL')];
-if(L.length){const k=L.findIndex(x=>x.classList.contains('on')),f=Math.max(k,0);t.innerHTML=L.slice(f,f+3).map((x,i)=>'<div'+(i==0&&k>=0?' class="cur"':'')+'>'+esc(x.textContent)+'</div>').join('')}
+if(L.length){const k=L.findIndex(x=>x.classList.contains('on')),f=Math.max(k,0);t.innerHTML=(ly.classList.contains('hint')?'<div class="pl" style="font-size:12.5px;opacity:.85">Cuplikan 30 dtk: buka Lihat penuh, lalu ketuk baris yang sedang dinyanyikan agar lirik ikut lagu.</div>':'')+L.slice(f,f+3).map((x,i)=>'<div'+(i==0&&k>=0?' class="cur"':'')+'>'+esc(x.textContent)+'</div>').join('')}
 else{const tx=ly.querySelector('.mzTx');t.innerHTML=tx?tx.textContent.split('\n').filter(x=>x.trim()).slice(0,4).map(x=>'<div class="pl">'+esc(x)+'</div>').join(''):'<div class="pl">'+esc(ly.textContent.trim()||'Memuat lirik...')+'</div>'}};
 let q=0;new MutationObserver(()=>{cancelAnimationFrame(q);q=requestAnimationFrame(lpv)}).observe(ly,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});lpv()}
 const ci=$('mzCi');if(ci){const cov=()=>np.style.setProperty('--mzCov','url("'+(ci.getAttribute('src')||'').replace(/"/g,'%22')+'")');new MutationObserver(cov).observe(ci,{attributes:true,attributeFilter:['src']});cov()}
@@ -2199,7 +2269,7 @@ const AC=()=>J(K,{}),SA=a=>LS.setItem(K,JSON.stringify(a));
 {const a=AC();if(!a[DEV]){a[DEV]={name:'Anz',s:'nxdev',h:DH};SA(a)}}
 const sess=J(SS,null);
 const save=()=>{if(sess)try{LS.setItem('nxMzU:'+sess.email,JSON.stringify({F:LS.getItem('nxMzF'),H:LS.getItem('nxMzH')}))}catch(e){}};
-const enter=(email,name)=>{const u=J('nxMzU:'+email,{});['F','H'].forEach(x=>{if(u[x]!=null)LS.setItem('nxMz'+x,u[x]);else LS.removeItem('nxMz'+x)});LS.setItem('nxMzname',name);LS.setItem(SS,JSON.stringify({email,name}));try{sessionStorage.setItem('azWel','1')}catch(e){}(window.azGo||function(){location.reload()})()};
+const enter=(email,name)=>{const u=J('nxMzU:'+email,{});['F','H'].forEach(x=>{if(u[x]!=null)LS.setItem('nxMz'+x,u[x]);else LS.removeItem('nxMz'+x)});LS.setItem('nxMzname',name);LS.setItem('azLastAcc',email);LS.setItem(SS,JSON.stringify({email,name}));try{sessionStorage.setItem('azWel','1');sessionStorage.setItem('azUnlock','1')}catch(e){}(window.azGo||function(){location.reload()})()};
 const DUM=0;
 const UI='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-7 7-7s7 3 7 7"/><path d="M19 8v6M16 11h6"/></svg>',
 EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
@@ -2258,6 +2328,41 @@ function welcome(force){let w=0;try{w=sessionStorage.getItem('azWel');sessionSto
 const n=LS.getItem('nxMzname')||(sess&&sess.name)||'';
 setTimeout(()=>{const d=document.createElement('div');d.id='azWel';d.innerHTML='<i>'+CK+'</i><span><b></b><small>Kamu sudah masuk ke dashboard</small></span>';d.querySelector('b').textContent=(w?'Berhasil masuk, ':'Selamat datang kembali, ')+n;document.body.appendChild(d);
 requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('on')));setTimeout(()=>{d.classList.remove('on');setTimeout(()=>d.remove(),900)},4200)},w?1500:250)}
+/* ===== AZGATE: kunci sidik jari saat aplikasi dibuka ===== */
+function azGate(){let un=0;try{un=sessionStorage.getItem('azUnlock')==='1'}catch(e){}
+const acc=AC()[sess.email];/* login permanen: sudah masuk = langsung masuk, tanpa verifikasi ulang. Keluar hanya lewat tombol Keluar */
+if(!acc||!acc.fp||un||1)return welcome();
+const o=document.createElement('div');o.id='nxAu';document.body.appendChild(o);
+const nm=(acc.name||sess.name||'').replace(/[<>&"]/g,''),$=i=>o.querySelector('#'+i),er=(m,ok)=>{const e=$('nxEr');if(e){e.textContent=m||'';e.className='nxEr'+(ok?' nxOk':'')}};
+const box=h=>{o.innerHTML='<div class="nxBx">'+h+'</div>';o.scrollTop=0};
+const hdr='<div class="azLg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></div><h1>Aurora</h1><p class="azDv">DEVELOPER • ANZX</p>';
+const unlock=()=>{try{sessionStorage.setItem('azUnlock','1')}catch(e){}o.style.transition='opacity .35s';o.style.opacity='0';setTimeout(()=>{o.remove();welcome(true)},360)};
+let fails=0,lock=0;
+const out=()=>{try{LS.removeItem(SS)}catch(e){}location.reload()};
+function pwStep(msg){
+box(hdr+'<p>Masukkan username &amp; password untuk membuka Aurora</p><input id="nxUn" placeholder="Username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"><div class="azPw"><input id="nxPw" type="password" placeholder="Password" autocomplete="current-password"><span class="azEy" id="nxEy" role="button" tabindex="0" aria-label="Lihat password">'+EYE+'</span></div><div class="nxEr" id="nxEr"></div><button class="nxBt" id="nxGo">Masuk</button><span class="nxLk" id="nxFb">Coba sidik jari lagi</span><span class="nxLk" id="nxOut">Keluar dari akun ini</span>');
+if(msg)er(msg);
+$('nxEy').onclick=()=>{const p=$('nxPw');p.type=p.type=='password'?'text':'password'};
+$('nxFb').onclick=()=>fpStep(1);$('nxOut').onclick=out;
+const go=async()=>{const u=$('nxUn').value.trim().toLowerCase(),pw=$('nxPw').value;
+if(Date.now()<lock)return er('Terlalu banyak percobaan. Coba lagi '+Math.ceil((lock-Date.now())/1000)+' detik lagi');
+if(!u||!pw)return er('Isi username dan password');
+const x=AC()[u],hv=x&&x.h?await hash(pw,x.s):null;
+if(!x||u!==sess.email||hv!==x.h){fails++;if(fails>=5){lock=Date.now()+30000;fails=0}return er('Username atau password salah')}
+er('Berhasil ✓',1);setTimeout(unlock,300)};
+$('nxGo').onclick=go;$('nxPw').onkeydown=$('nxUn').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();go()}}}
+async function fpStep(manual){
+const real=!!acc.fp.id&&await fpReal();
+if(!real)return pwStep(acc.fp.id?'Sidik jari perlu alamat https di perangkat yang punya sensor.':'');
+box(hdr+'<p>Halo, '+nm+'. Verifikasi sidik jari untuk masuk</p><div class="azFpW"><button class="azFp" id="nxFp" type="button" aria-label="Sidik jari">'+RING+FPS+'<u></u></button><small id="nxFpT">Tekan sidik jari lalu tempelkan jari ke sensor</small></div><div class="nxEr" id="nxEr"></div><span class="nxLk" id="nxPwL">Pakai username &amp; password</span>');
+const fp=$('nxFp');let busy=0,tries=0;
+const go=async auto=>{if(busy)return;busy=1;er('');fp.classList.add('sc');
+try{await fpAsk(acc.fp.id);fp.classList.remove('sc');fp.classList.add('ok');er('Sidik jari cocok ✓',1);setTimeout(unlock,500)}
+catch(e){fp.classList.remove('sc');busy=0;if(auto)return er('Tekan ikon sidik jari untuk memulai');tries++;if(tries>=5){try{toast('Sidik jari gagal 5 kali. Masuk lewat username & password saja')}catch(x){}pwStep('Sidik jari gagal 5 kali. Masukkan username & password.');return}er('Sidik jari tidak cocok ('+tries+'/5). Coba lagi'+(tries>=3?' atau pakai username & password di bawah':'')+'.')}};
+fp.addEventListener('pointerdown',e=>{e.preventDefault();go(0)});$('nxPwL').onclick=()=>pwStep();
+if(!manual)setTimeout(()=>go(1),400)}
+fpStep(0)}
+
 if(!sess){
 try{sessionStorage.removeItem('azBotOk')}catch(e){}
 const o=document.createElement('div');o.id='nxAu';document.body.appendChild(o);let fails=0,lock=0;
@@ -2265,13 +2370,23 @@ const $=i=>o.querySelector('#'+i),er=(m,ok)=>{const e=$('nxEr');if(!e)return;e.t
 const box=h=>{o.innerHTML='<div class="nxBx">'+h+'</div>';o.scrollTop=0};
 const hdr='<div class="azLg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></div><h1>Aurora</h1><p class="azDv">DEVELOPER \u2022 ANZX</p>';
 const fpBtn='<div class="azFpW"><button class="azFp" id="nxFp" type="button" aria-label="Sidik jari">'+RING+FPS+'<u></u></button><small id="nxFpT"></small></div>';
+const lastAcc=()=>{try{const e=LS.getItem('azLastAcc'),a=e&&AC()[e];return a?Object.assign({k:e},a):null}catch(x){return null}};
+const fpAccs=()=>{const a=AC();return Object.keys(a).filter(k=>a[k].fp&&a[k].fp.id).map(k=>Object.assign({k},a[k]))};
+const fpAny=async ids=>{const c=await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:ids.map(id=>({type:'public-key',id:ub64(id)})),userVerification:'required',timeout:60000}});return b64(c.rawId)};
+async function fpFirst(manual){const L=fpAccs();if(!L.length||!(await fpReal()))return home();
+const la=lastAcc(),pre=L.length==1?L[0]:(la&&la.fp&&la.fp.id?la:null),nm=x=>String(x.name||x.k).replace(/[<>&"]/g,'');
+box(hdr+'<p>'+(pre&&L.length==1?'Halo, '+nm(pre)+'. ':'')+'Masuk dengan sidik jari</p>'+fpBtn+'<div class="nxEr" id="nxEr"></div><span class="nxLk" id="nxPwL">Pakai username &amp; password</span><span class="nxLk" id="nxNw">Daftar akun baru</span>');
+$('nxFpT').textContent='Tekan ikon lalu tempelkan jari. Akunmu terdeteksi otomatis';const fp=$('nxFp');let busy=0,tries=0;
+const go=async auto=>{if(busy)return;busy=1;er('');fp.classList.add('sc');try{const id=await fpAny(L.map(x=>x.fp.id)),a=L.find(x=>x.fp.id===id)||pre;if(!a)throw 0;fp.classList.remove('sc');fp.classList.add('ok');er('Akun terdeteksi: '+nm(a)+' \u2713',1);setTimeout(()=>{busy=0;enter(a.k,a.name)},700)}catch(e){fp.classList.remove('sc');busy=0;if(auto)return er('Tekan ikon sidik jari untuk memulai');tries++;if(tries>=5){try{toast('Sidik jari gagal 5 kali. Masuk lewat username & password saja')}catch(x){}form('in',{u:pre?pre.k:''});er('Sidik jari gagal 5 kali. Masukkan username & password.');return}er('Sidik jari tidak cocok ('+tries+'/5). Coba lagi'+(tries>=3?' atau pakai username & password di bawah':'')+'.')}};
+fp.addEventListener('pointerdown',e=>{e.preventDefault();go(0)});$('nxPwL').onclick=()=>form('in',{u:pre?pre.k:''});$('nxNw').onclick=home;
+if(!manual)setTimeout(()=>go(1),400)}
 const bad=()=>{fails++;if(fails>=5){lock=Date.now()+30000;fails=0}return{m:'Username atau password salah'}};
 function home(){box(hdr+'<div class="azEq" aria-hidden="true"><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u></div><p class="azTg">Dengarkan lagu favoritmu, kapan saja dan di mana saja</p><div class="azFt"><span>\ud83c\udfb5 Jutaan lagu</span><span>\ud83d\udcdd Lirik sinkron</span><span>\ud83d\udce5 Mode offline</span><span>\ud83d\udc8e Liquid Glass</span><span>\u2764\ufe0f Favorit &amp; daftar putar</span><span>\ud83d\ude34 Timer tidur</span></div><div class="azSt"><div><b>40+</b>Artis trending</div><div><b>Gratis</b>Tanpa iklan</div><div><b>HD</b>Sampul lagu</div></div><button class="nxBt" id="nxUp">'+UI+'Daftar username &amp; password</button><div class="azOr"><span></span>atau<span></span></div><button class="nxBt g2" id="nxIn">Masuk</button><p class="azFo">Aurora v1.0 \u2022 Dibuat oleh <b>Anzx</b></p>');
 $('nxUp').onclick=()=>form('up');$('nxIn').onclick=()=>form('in')}
 function form(m,keep){const up=m=='up';keep=keep||{};
 box(hdr+'<p>'+(up?'Daftar username &amp; password':'Masuk ke akunmu')+'</p><input id="nxUn" placeholder="Username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="'+(up?20:40)+'"><div class="azPw"><input id="nxPw" type="password" placeholder="Password'+(up?' (min. 3 karakter)':'')+'" autocomplete="'+(up?'new-password':'current-password')+'"><span class="azEy" id="nxEy" role="button" tabindex="0" aria-label="Lihat password">'+EYE+'</span></div>'
 +(up?'<div class="azSm" id="nxSm" data-l="0"><div><i></i><i></i><i></i></div><span id="nxSt">Min. 3 karakter</span></div><div class="azHn">Lemah \u2192 Cocok \u2192 Kuat. Campur huruf besar, angka &amp; simbol biar makin kuat.</div>':'')
-+'<div class="nxEr" id="nxEr"></div>'+(up?'<button class="nxBt" id="nxGo">Lanjut \u2022 daftarkan sidik jari</button>':fpBtn)+'<span class="nxLk" id="nxTg">'+(up?'Sudah punya akun? Masuk':'Belum punya akun? Daftar username &amp; password')+'</span><span class="nxLk" id="nxBk">Kembali</span>');
++'<div class="nxEr" id="nxEr"></div>'+(up?'<button class="nxBt" id="nxGo">Lanjut \u2022 daftarkan sidik jari</button>':'<button class="nxBt" id="nxGoIn">Masuk</button>'+(fpAccs().length?'<span class="nxLk" id="nxFpBack">Masuk dengan sidik jari</span>':''))+'<span class="nxLk" id="nxTg">'+(up?'Sudah punya akun? Masuk':'Belum punya akun? Daftar username &amp; password')+'</span><span class="nxLk" id="nxBk">Kembali</span>');
 if(keep.u)$('nxUn').value=keep.u;if(keep.p)$('nxPw').value=keep.p;
 $('nxBk').onclick=home;$('nxTg').onclick=()=>form(up?'in':'up');
 $('nxEy').onclick=()=>{const p=$('nxPw');p.type=p.type=='password'?'text':'password'};
@@ -2282,22 +2397,14 @@ if(!/^[A-Za-z0-9_.]{3,20}$/.test(u))return er('Username 3\u201320 karakter: huru
 if(pw.length<3)return er('Password minimal 3 karakter');
 if(a[u.toLowerCase()])return er('Username sudah dipakai, pilih yang lain');
 enroll(u,pw,false)}}
-else{const fp=$('nxFp'),T=$('nxFpT');let busy=0;
-fpReal().then(r=>{T.textContent=r?'Tekan sidik jari untuk masuk':'Tahan sidik jari ~1 detik untuk masuk'});
-async function run(auto){if(busy)return;const u=$('nxUn').value.trim().toLowerCase(),pw=$('nxPw').value;
+else{const go=async()=>{const u=$('nxUn').value.trim().toLowerCase(),pw=$('nxPw').value;
 if(Date.now()<lock)return er('Terlalu banyak percobaan. Coba lagi '+Math.ceil((lock-Date.now())/1000)+' detik lagi');
 if(!u)return er('Isi username dulu');if(!pw)return er('Isi password dulu');
-busy=1;er('');const x=AC()[u],real=!!(x&&x.fp&&x.fp.id);fp.classList.remove('ok');fp.classList.add('sc');
-let hp=null;if(!real){hp=hold(fp,auto);hp.catch(()=>{})}
-try{const hv=x&&x.h?await hash(pw,x.s):null;if(!x||!x.h||hv!==x.h)throw bad();
-if(!x.fp){fp.classList.remove('sc');busy=0;er('Akun ini belum punya sidik jari, daftarkan dulu.',1);return setTimeout(()=>enroll(u,pw,true),700)}
-if(real){if(!await fpReal())throw{m:'Sidik jari asli butuh HTTPS di perangkat yang punya sensor. Buka lewat alamat https atau pasang sebagai aplikasi.'};await fpAsk(x.fp.id)}
-else await hp;
-fails=0;fp.classList.remove('sc');fp.classList.add('ok');er('Sidik jari cocok \u2713',1);setTimeout(()=>{busy=0;pass(u,x.name)},550)}
-catch(e){fp.classList.remove('sc');busy=0;er(e&&e.m||(e&&e.name=='NotAllowedError'?'Sidik jari dibatalkan atau tidak cocok':'Sidik jari gagal, coba lagi'))}}
-fp.addEventListener('pointerdown',e=>{e.preventDefault();run(0)});
-fp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();run(1)}});
-$('nxPw').onkeydown=$('nxUn').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();fp.focus();er('Sekarang tekan sidik jari untuk masuk',1)}}}}
+const x=AC()[u],hv=x&&x.h?await hash(pw,x.s):null;
+if(!x||!x.h||hv!==x.h){bad();return er('Username atau password salah')}
+fails=0;er('Berhasil \u2713',1);setTimeout(()=>pass(u,x.name),300)};
+$('nxGoIn').onclick=go;$('nxPw').onkeydown=$('nxUn').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();go()}};
+const bb=$('nxFpBack');if(bb)bb.onclick=()=>fpFirst(0)}}
 async function enroll(u,pw,legacy){const real=await fpReal();
 box(hdr+'<p>'+(legacy?'Daftarkan sidik jari untuk akun ini':'Terakhir: daftarkan sidik jari')+'</p>'+fpBtn+'<div class="nxEr" id="nxEr"></div><span class="nxLk" id="nxBk">Kembali</span>');
 $('nxFpT').textContent=real?'Tekan ikon, lalu tempelkan jari ke sensor perangkat':'Tahan ikon sidik jari sampai lingkarannya penuh (\u00b11 detik)';
@@ -2312,9 +2419,9 @@ SA(a);fp.classList.remove('sc');fp.classList.add('ok');er('Sidik jari terdaftar 
 catch(e){fp.classList.remove('sc');busy=0;er(e&&e.m||(e&&e.name=='NotAllowedError'?'Pendaftaran sidik jari dibatalkan':'Sidik jari gagal, coba lagi'))}};
 fp.addEventListener('pointerdown',e=>{e.preventDefault();go(0)});
 fp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go(1)}})}
-home();
+(()=>{if(fpAccs().length)fpFirst(0);else home()})();
 }else{setInterval(save,1500);let ok=0;try{ok=sessionStorage.getItem('azBotOk')==='1'}catch(e){}
-welcome()}
+azGate()}
 
 const AU=window.mzAudio;
 /* offline + download (IndexedDB) */
@@ -3057,5 +3164,170 @@ let q=0;const all=()=>{q=0;tint();mini();badge();offUI()};
 new MutationObserver(()=>{if(!q)q=requestAnimationFrame(all)}).observe(B,{childList:true,subtree:true});all();
 const A=window.mzAudio;if(A){const up=()=>{const p=A.duration?A.currentTime/A.duration:0;document.querySelectorAll('.mzMini .azPr b').forEach(b=>b.style.transform='scaleX('+p.toFixed(4)+')')};['timeupdate','loadstart','emptied'].forEach(n=>A.addEventListener(n,up));const pl=()=>B.classList.toggle('azPl',!A.paused);['play','pause','ended','emptied'].forEach(n=>A.addEventListener(n,pl));pl()}
 })();
+</script>
+
+<style id="azfix">
+/* ===== AZFIX: bar bawah stabil + mulus (tanpa transisi layout) ===== */
+body .mzBr .mzHm,body .mzBr .mzMc,body .mzBr .mzSi,body .mzBr .mzXc{display:none!important}
+body .mzBr.cl .mzHm,body .mzBr.sr .mzHm{display:inline-flex!important}
+body .mzBr.sr.kb .mzHm{display:none!important}
+body .mzBr.cl .mzMc{display:flex!important}
+body .mzBr.sr .mzSi{display:flex!important}
+body .mzBr.sr.kb .mzXc{display:inline-flex!important}
+body .mzBr.cl .mzTb,body .mzBr.sr .mzTb,body .mzBr.sr .mzSs{display:none!important}
+body .mzBr .mzTb{display:flex}
+body .mzBr .mzHm,body .mzBr .mzMc,body .mzBr .mzSi,body .mzBr .mzXc,body .mzBr .mzTb,body .mzBr .mzSs{
+  transition:opacity .25s,transform .35s cubic-bezier(.22,1,.36,1),box-shadow .25s,background .25s!important}
+body .mzBr.cl .mzMc,body .mzBr.sr .mzSi{min-width:0;flex:1 1 0%;width:auto;margin:0;overflow:hidden}
+@keyframes azIn{from{opacity:0;transform:translateY(16px) scale(.88)}to{opacity:1;transform:none}}
+@keyframes azInX{from{opacity:0;transform:translateX(-14px) scale(.8)}to{opacity:1;transform:none}}
+body .mzBr.cl .mzHm,body .mzBr.sr .mzHm{animation:azInX .46s cubic-bezier(.22,1.25,.36,1) backwards!important}
+body .mzBr.cl .mzMc,body .mzBr.sr .mzSi{animation:azIn .5s cubic-bezier(.22,1.15,.36,1) backwards!important}
+body .mzBr:not(.cl):not(.sr) .mzTb{animation:azIn .45s cubic-bezier(.22,1.1,.36,1) backwards!important}
+body .mzBr .mzSs{animation:azIn .45s cubic-bezier(.22,1.1,.36,1) backwards!important}
+body .mzBr.cl .mzMc .mzMeta{min-width:0;flex:1}
+body .mzBr.cl .mzMc .mzMeta b,body .mzBr.cl .mzMc .mzMeta small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body .mzBr.cl .mzMc .mzIc{flex:none}
+/* tab bar lebih terbaca di atas daftar lagu */
+body:not(.mzGmBl):not(.mzNoLG) .mzTb,body:not(.mzGmBl):not(.mzNoLG) .mzMc,body:not(.mzGmBl):not(.mzNoLG) .mzSi{background-color:rgba(18,18,26,.62);-webkit-backdrop-filter:blur(28px) saturate(190%);backdrop-filter:blur(28px) saturate(190%)}
+body:not(.mzGmBl):not(.mzNoLG) .mzSs,body:not(.mzGmBl):not(.mzNoLG) .mzHm{background-color:rgba(18,18,26,.62);-webkit-backdrop-filter:blur(28px) saturate(190%);backdrop-filter:blur(28px) saturate(190%)}
+.mzMini .azPr b{transition:none!important}
+
+/* ===== AZFIX: lirik ===== */
+.mzLyS{position:relative;scroll-behavior:auto;padding-top:22%;padding-bottom:45%}
+.mzL{--d:4;opacity:max(.24,calc(1 - var(--d)*.22));filter:blur(calc(min(var(--d),3)*.55px));transform:scale(calc(.95 + (1 - min(var(--d),1))*.05));will-change:opacity,transform;transition:opacity .55s ease,filter .55s ease,transform .7s cubic-bezier(.22,1,.36,1)}
+.mzL.on{opacity:1;filter:none;transform:none;text-shadow:0 0 22px rgba(255,255,255,.28)}
+.mzLyS.hint::before{content:"Cuplikan 30 dtk: ketuk baris yang sedang dinyanyikan agar lirik ikut lagu";display:block;position:sticky;top:0;z-index:2;margin:0 0 10px;padding:9px 13px;border-radius:14px;font-size:12.5px;font-weight:600;line-height:1.35;color:#fff;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:azHint 1.8s ease-in-out infinite}
+@keyframes azHint{50%{background:rgba(255,255,255,.28)}}
+.mzLpt div{transition:opacity .6s ease,font-size .6s ease}
+
+/* pemutar YouTube tidak ditampilkan; tetap ada di halaman supaya audio jalan */
+#azYtBox{position:fixed;right:0;bottom:0;width:200px;height:200px;opacity:.01;pointer-events:none;z-index:-1;overflow:hidden}#azYtBox iframe{width:100%;height:100%;border:0}
+
+/* view-transition-name membuat 'backdrop root' sehingga blur tidak melihat isi halaman; VT tidak dipakai, jadi dimatikan */
+.mzBr,.mzMini,.mzTop,.mzNP{view-transition-name:none!important}
+body .mzBr .mzTb,body .mzBr .mzMc,body .mzBr .mzSi,body .mzBr .mzSs,body .mzBr .mzHm,body .mzMini{
+ background-image:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 55%,rgba(255,255,255,.1))!important;
+ background-color:rgba(16,16,24,.78)!important;
+ -webkit-backdrop-filter:blur(34px) saturate(180%)!important;backdrop-filter:blur(34px) saturate(180%)!important}
+body .mzBr::before{-webkit-backdrop-filter:blur(24px)!important;backdrop-filter:blur(24px)!important;background:linear-gradient(to top,rgba(8,8,14,.72),rgba(8,8,14,0))!important}
+@media(prefers-reduced-motion:reduce){.mzL{transition:none}.mzLyS.hint::before{animation:none}}
+</style>
+<script id="azfix-js">
+(function(){const np=document.querySelector('.mzNP');if(!np||!window.MutationObserver)return;let was=false;
+new MutationObserver(()=>{const l=np.classList.contains('ly');if(l&&!was){setTimeout(()=>window.__azLyNow&&window.__azLyNow(true),80);setTimeout(()=>window.__azLyNow&&window.__azLyNow(true),720)}was=l}).observe(np,{attributes:true,attributeFilter:['class']})})();
+</script>
+<script>/* ISI API KEY YouTube Data API v3 di sini (di antara tanda petik) */
+/* ===== TARUH API KEY YOUTUBE DI SINI (di antara tanda kutip), contoh: 'AIzaSy...' ===== */
+window.AZ_YT_KEY='';
+</script>
+<script id="azyt-js">
+(function(){
+const A=window.mzAudio,np=document.querySelector('.mzNP'),cov=np&&np.querySelector('.mzCov>div');if(!A||!np||!cov)return;
+const LS={g:k=>{try{return localStorage.getItem(k)}catch(e){return null}},s:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},d:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const KEY=()=>String(window.AZ_YT_KEY||LS.g('azYtKey')||'').trim(),TT=m=>{try{toast(m)}catch(e){}};
+window.azYtOn=()=>true;
+const PR=HTMLMediaElement.prototype,D=n=>Object.getOwnPropertyDescriptor(PR,n),R={pa:D('paused'),ct:D('currentTime'),du:D('duration'),src:D('src'),vol:D('volume')},pPause=PR.pause,pPlay=PR.play;
+let P=null,apiP=null,mode=false,vid=null,pausedF=true,ready=false,poll=0,lastDur=0;
+const ev=n=>{try{A.dispatchEvent(new Event(n))}catch(e){}};
+/* ---------- IFrame API ---------- */
+function loadApi(){if(apiP)return apiP;apiP=new Promise((res,rej)=>{if(window.YT&&YT.Player)return res();const pr=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{try{pr&&pr()}catch(e){}res()};const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>{apiP=null;rej(new Error('api'))};document.head.appendChild(s)});return apiP}
+async function ensure(){await loadApi();if(P)return;const box=document.createElement('div');box.id='azYtBox';document.body.appendChild(box);const h=document.createElement('div');box.appendChild(h);
+const v={playsinline:1,controls:1,rel:0,modestbranding:1,iv_load_policy:3,fs:1};if(/^https?:/.test(location.protocol))v.origin=location.origin;
+await new Promise(res=>{P=new YT.Player(h,{width:'100%',height:'100%',playerVars:v,events:{onReady:()=>{ready=true;res()},onStateChange:st,onAutoplayBlocked:blocked,onError:err}})})}
+async function open(id){vid=id;mode=true;np.classList.add('azVid');pausedF=false;lastDur=0;
+try{await ensure()}catch(e){leave();TT('Gagal memuat pemutar YouTube (cek koneksi)');return}
+if(vid!==id||!mode)return;try{P.setVolume(Math.round(R.vol.get.call(A)*100));P.loadVideoById(id);if(pausedF)P.pauseVideo()}catch(e){}}
+function leave(){mode=false;clearInterval(poll);try{P&&ready&&P.stopVideo()}catch(e){}np.classList.remove('azVid');pausedF=true;lastDur=0}
+function durChk(){try{const d=P.getDuration();if(d&&d!==lastDur){lastDur=d;ev('durationchange');ev('loadedmetadata')}}catch(e){}}
+function st(e){if(!mode)return;const s=e.data;
+if(s===1){pausedF=false;clearInterval(poll);poll=setInterval(()=>{ev('timeupdate');durChk()},250);durChk();ev('play');ev('playing')}
+else if(s===2){pausedF=true;clearInterval(poll);ev('timeupdate');ev('pause')}
+else if(s===0){pausedF=true;clearInterval(poll);ev('pause');ev('ended')}
+else if(s===3)durChk()}
+function blocked(){pausedF=true;ev('pause');TT('Ketuk tombol play di video untuk mulai')}
+function err(e){const c=e&&e.data;pausedF=true;ev('pause');
+if(c===153||c===152||c===150||c===101||c===100||c===5||c===2){if(c===153)TT('YouTube menolak pemutar: buka Aurora lewat https (bukan file://)');else{TT('Video ini tidak bisa diputar, lanjut lagu berikutnya');try{window.mzStep&&window.mzStep(1)}catch(x){}}}}
+/* ---------- audio element -> YouTube ---------- */
+const def=(n,o)=>Object.defineProperty(A,n,Object.assign({configurable:true},o));
+def('currentTime',{get(){return mode?((ready&&P&&P.getCurrentTime&&P.getCurrentTime())||0):R.ct.get.call(A)},set(v){if(mode){try{ready&&P.seekTo(v,true)}catch(e){}ev('seeked');ev('timeupdate')}else R.ct.set.call(A,v)}});
+def('duration',{get(){return mode?(lastDur||NaN):R.du.get.call(A)}});
+def('paused',{get(){return mode?pausedF:R.pa.get.call(A)}});
+def('src',{get(){return mode?'yt:'+vid:R.src.get.call(A)},set(v){v=String(v||'');if(v.indexOf('yt:')===0){pPause.call(A);open(v.slice(3))}else{if(mode)leave();R.src.set.call(A,v)}}});
+def('volume',{get(){return R.vol.get.call(A)},set(v){R.vol.set.call(A,v);try{mode&&ready&&P.setVolume(Math.round(v*100))}catch(e){}}});
+A.play=function(){if(mode){pausedF=false;try{ready&&P.playVideo()}catch(e){}return Promise.resolve()}return pPlay.call(A)};
+A.pause=function(){if(mode){pausedF=true;try{ready&&P.pauseVideo()}catch(e){}return}return pPause.call(A)};
+const rmA=A.removeAttribute.bind(A);A.removeAttribute=function(n){if(n==='src'&&mode)leave();return rmA(n)};
+/* ---------- cari video ---------- */
+const nz=x=>String(x||'').toLowerCase().replace(/\(.*?\)|\[.*?\]/g,' ').replace(/\b(feat|ft)\b.*$/,' ').replace(/[^a-z0-9À-￿ ]/g,' ').replace(/\s+/g,' ').trim();
+const iso=x=>{const m=/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(x||'');return m?(+m[1]||0)*3600+(+m[2]||0)*60+(+m[3]||0):0};
+const MAP=()=>{try{return JSON.parse(LS.g('azYtMap')||'{}')}catch(e){return{}}};
+let hold=0;
+async function jget(u){const c=new AbortController,h=setTimeout(()=>c.abort(),10000);try{const r=await fetch(u,{signal:c.signal}),j=await r.json().catch(()=>({}));if(!r.ok){const e=new Error((j.error&&j.error.message)||('HTTP '+r.status));e.reason=j.error&&j.error.errors&&j.error.errors[0]&&j.error.errors[0].reason;e.code=r.status;throw e}return j}finally{clearTimeout(h)}}
+function why(e){const r=e&&e.reason;if(r==='quotaExceeded'||r==='rateLimitExceeded'){hold=Date.now()+36e5;return'Kuota API YouTube hari ini habis (reset tengah malam waktu Pasifik). Memutar cuplikan.'}
+if(r==='keyInvalid'||e.code===400){hold=Date.now()+36e5;return'API key YouTube tidak valid. Periksa lagi di Pengaturan.'}
+if(r==='accessNotConfigured'||r==='forbidden'||e.code===403){hold=Date.now()+36e5;return'YouTube Data API v3 belum aktif untuk key ini (aktifkan di Google Cloud, atau cek pembatasan key).'}
+return'Gagal mencari video YouTube (jaringan).'}
+async function findKey(s){const key=KEY();if(!key||Date.now()<hold)return null;const ck=nz(s.t)+'|'+nz(s.a),m=MAP();if(m[ck])return m[ck];
+try{const q=String(s.t).replace(/\(.*?\)|\[.*?\]/g,' ')+' '+(s.a||'')+' official audio';
+const r=await jget('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=8&q='+encodeURIComponent(q)+'&key='+encodeURIComponent(key));
+const ids=(r.items||[]).map(x=>x.id&&x.id.videoId).filter(Boolean);if(!ids.length)return null;
+const v=await jget('https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,status&id='+ids.join(',')+'&key='+encodeURIComponent(key));
+const tn=nz(s.t),an=nz(s.a).split(' ')[0]||'',own=/\b(live|cover|karaoke|reaction|nightcore|sped up|slowed|8d|remix|instrumental)\b/i;
+let best=null;(v.items||[]).forEach(x=>{if(x.status&&x.status.embeddable===false)return;const d=iso(x.contentDetails&&x.contentDetails.duration),ti=x.snippet.title||'',tl=nz(ti),ch=x.snippet.channelTitle||'';
+if(s.dur&&(d>s.dur*1.5+40||d<s.dur*.5))return;let sc=0;if(tl.includes(tn))sc+=4;if(an&&(tl.includes(an)||nz(ch).includes(an)))sc+=3;if(/ - topic$|vevo$|official/i.test(ch))sc+=2;if(/official (music )?video|official audio/i.test(ti))sc+=1;
+if(s.dur){const df=Math.abs(d-s.dur);sc+=df<5?3:df<12?2:df<25?1:-1}if(own.test(ti)&&!own.test(s.t))sc-=4;
+if(!best||sc>best.sc)best={sc,id:x.id,dur:d,title:ti}});
+if(!best||best.sc<4)return null;const o={id:best.id,dur:best.dur};m[ck]=o;const ks=Object.keys(m);if(ks.length>400)delete m[ks[0]];LS.s('azYtMap',JSON.stringify(m));return o}
+catch(e){why(e);return null}}
+/* ---------- cari video TANPA API key (Piped + Invidious, balapan cepat) ---------- */
+const PIPED=['https://pipedapi.kavin.rocks','https://api.piped.private.coffee','https://pipedapi.adminforge.de','https://pipedapi.leptons.xyz'];
+const INV=['https://inv.nadeko.net','https://invidious.nerdvpn.de','https://invidious.privacyredirect.com','https://yewtu.be'];
+async function keyless(q){
+  const e=encodeURIComponent(q);
+  const ps=[
+    ...PIPED.map(h=>jget(h+'/search?filter=videos&q='+e).then(r=>{const L=(r.items||[]).filter(x=>x.url&&/watch\?v=/.test(x.url)).map(x=>({id:x.url.split('v=')[1].split('&')[0],ti:x.title||'',ch:x.uploaderName||'',d:+x.duration||0}));if(!L.length)throw 0;return L})),
+    ...INV.map(h=>jget(h+'/api/v1/search?type=video&q='+e).then(r=>{const L=(Array.isArray(r)?r:[]).filter(x=>x.videoId).map(x=>({id:x.videoId,ti:x.title||'',ch:x.author||'',d:+x.lengthSeconds||0}));if(!L.length)throw 0;return L}))
+  ];
+  try{return await Promise.any(ps)}catch(x){return null}
+}
+window.azYtFind=async function(s){
+  const ck=nz(s.t)+'|'+nz(s.a),m=MAP();if(m[ck])return m[ck];
+  let o=await findKey(s);
+  if(!o){
+    const q=String(s.t).replace(/\(.*?\)|\[.*?\]/g,' ')+' '+(s.a||'')+' official audio';
+    const L=await keyless(q);
+    if(L){
+      const tn=nz(s.t),an=nz(s.a).split(' ')[0]||'',own=/\b(live|cover|karaoke|reaction|nightcore|sped up|slowed|8d|remix|instrumental|lyrics? video)\b/i;
+      let best=null;
+      L.forEach(x=>{const tl=nz(x.ti),d=x.d;
+        if(s.dur&&d>0&&(d>s.dur*1.5+40||d<s.dur*.5))return;
+        let sc=0;if(tl.includes(tn))sc+=4;if(an&&(tl.includes(an)||nz(x.ch).includes(an)))sc+=3;
+        if(/ - topic$|vevo$|official/i.test(x.ch))sc+=2;if(/official (music )?video|official audio/i.test(x.ti))sc+=1;
+        if(s.dur&&d>0){const df=Math.abs(d-s.dur);sc+=df<5?3:df<12?2:df<25?1:-1}
+        if(own.test(x.ti)&&!own.test(s.t))sc-=4;
+        if(!best||sc>best.sc)best={sc,id:x.id,dur:d}});
+      if(best&&best.sc>=4)o={id:best.id,dur:best.dur};
+    }
+  }
+  if(o){m[ck]=o;const ks=Object.keys(m);if(ks.length>400)delete m[ks[0]];LS.s('azYtMap',JSON.stringify(m))}
+  return o;
+};
+})();
+
+</script>
+<style id="aznt">
+.azGc[data-nt]{display:none!important}.mzCd2:has(.azGc[data-nt]){display:none!important}
+body[data-nt=blur] #azWel{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.16)!important;-webkit-backdrop-filter:blur(22px) saturate(140%)!important;backdrop-filter:blur(22px) saturate(140%)!important;box-shadow:none!important}
+body[data-nt=basic] #azWel{background:#000!important;border:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 6px 20px rgba(0,0,0,.28)!important}
+body[data-lt=on][data-nt=blur] #azWel{background:rgba(255,255,255,.62)!important;color:#10141c!important;border-color:rgba(0,0,0,.08)!important}
+body[data-nt=basic] #toast,body[data-nt=basic] #azWel{border-radius:14px!important}
+body[data-nt=blur] #toast{border-radius:999px;padding:12px 20px}
+</style>
+<script id="aznt-js">
+(function(){const M={lg:'glass',bl:'blur',bs:'basic'};
+const sync=()=>{let g='lg';try{g=localStorage.getItem('nxMzgm')||'lg'}catch(e){}const v=M[g]||'glass';if(document.body.dataset.nt!==v)document.body.dataset.nt=v;try{localStorage.setItem('nxMznt',v)}catch(e){}};
+sync();new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
+document.addEventListener('click',()=>setTimeout(sync,60),true);window.__azNtSync=sync})();
 </script>
 </body></html>
