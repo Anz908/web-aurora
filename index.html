@@ -1911,7 +1911,7 @@ if(nw)nw.animate(push?[{transform:'translateX(100%)',opacity:.35},{transform:'no
 return true}catch(e){}return false};
 const anim=(el,c)=>{el.classList.remove('mzSI','mzSO');void el.offsetWidth;el.classList.add(c)};
 const srt=(L,f)=>{const by=S.sb||'date',dr=S.sd2||'dec';let r=L.slice();if(by=='name'){r.sort((a,b)=>String(f(a)||'').localeCompare(String(f(b)||''),'id'));if(dr=='dec')r.reverse()}else if(dr=='inc')r.reverse();return r};
-const ACT={rec:()=>{sv('nxMzR',[]);tt('Pencarian terakhir dihapus')},his:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus')},fav:()=>{sv('nxMzF',[]);tt('Favorit dihapus')},abt:()=>tt('Aurora v89 • YouTube full, Saavn, iTunes, Audius, LRCLIB'),shr:()=>navigator.share?navigator.share({title:'Aurora',url:location.href}).catch(()=>0):tt('Bagikan lewat menu browser'),plus:()=>tt('Segera hadir'),clrh:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus');lib()}};
+const ACT={rec:()=>{sv('nxMzR',[]);tt('Pencarian terakhir dihapus')},his:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus')},fav:()=>{sv('nxMzF',[]);tt('Favorit dihapus')},abt:()=>tt('Aurora v90 • YouTube full, Saavn, iTunes, Audius, LRCLIB'),shr:()=>navigator.share?navigator.share({title:'Aurora',url:location.href}).catch(()=>0):tt('Bagikan lewat menu browser'),plus:()=>tt('Segera hadir'),clrh:()=>{sv('nxMzH',[]);tt('Sesi terakhir dihapus');lib()}};
 ACT.mor=a=>menu(a,[{t:'Hapus pencarian terakhir',fn:()=>ACT.rec()},{t:'Hapus sesi terakhir',fn:()=>{ACT.his();lib()}},{t:'Hapus favorit',fn:()=>{ACT.fav();lib()}}]);
 ACT.flt=a=>{const by=S.sb||'date',dr=S.sd2||'dec';menu(a,[{t:'Name',ck:by=='name',fn:()=>{S.sb='name';lib()}},{t:'Tanggal Ditambahkan',ck:by=='date',fn:()=>{S.sb='date';lib()}},{sep:1},{t:'Increasing',ck:dr=='inc',fn:()=>{S.sd2='inc';lib()}},{t:'Decreasing',ck:dr=='dec',fn:()=>{S.sd2='dec';lib()}}])};
 ACT.prof=a=>menu(a,[{t:uname(),h:1},{t:'Pengaturan',fn:()=>nav('set')},{t:'Kembali ke AllTools',fn:()=>go('t0')}]);
@@ -3329,5 +3329,45 @@ body[data-nt=blur] #toast{border-radius:999px;padding:12px 20px}
 const sync=()=>{let g='lg';try{g=localStorage.getItem('nxMzgm')||'lg'}catch(e){}const v=M[g]||'glass';if(document.body.dataset.nt!==v)document.body.dataset.nt=v;try{localStorage.setItem('nxMznt',v)}catch(e){}};
 sync();new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
 document.addEventListener('click',()=>setTimeout(sync,60),true);window.__azNtSync=sync})();
+</script>
+
+<style id="azPerfCss">
+/* ===== MODE LANCAR (anti patah-patah): blur dimatikan di elemen yang ikut kena scroll ===== */
+html.azPerf *,html.azPerf *::before,html.azPerf *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;will-change:auto!important}
+/* bar yang selalu menempel: ganti blur dengan latar pekat transparan tipis */
+html.azPerf nav#nav.g,html.azPerf body[data-mode]:not([data-mode=box]) nav#nav.g{background-color:rgba(18,20,22,.93)!important}
+html.azPerf .mzMini{background-color:rgba(22,24,26,.94)!important}
+html.azPerf .mzTop{background-color:rgba(10,14,12,.9)!important}
+/* popup/dialog (tidak ikut scroll) boleh pakai blur ringan */
+html.azPerf .mzShP,html.azPerf .nxP,html.azPerf #nxCf,html.azPerf .mzMb,html.azPerf #nxAu .nxBx{-webkit-backdrop-filter:blur(10px)!important;backdrop-filter:blur(10px)!important;background-color:rgba(24,26,28,.9)}
+/* dekorasi berat: matikan */
+html.azPerf .nvb{display:none!important}
+html.azPerf .bub,html.azPerf .mzLgA,html.azPerf #bg::before,html.azPerf #bg::after,html.azPerf #nxAu::before,html.azPerf #nxAu::after,html.azPerf .azRim,html.azPerf .mzSk,html.azPerf .mzRow.cur.pl::after{animation:none!important}
+/* daftar lagu panjang: render hanya yang kelihatan */
+html.azPerf .mzRow{content-visibility:auto;contain-intrinsic-size:auto 70px}
+/* saat scroll: semua animasi berulang dijeda */
+html.azScr *,html.azScr *::before,html.azScr *::after{animation-play-state:paused!important}
+html.azPerf{-webkit-tap-highlight-color:transparent}
+body{overscroll-behavior-y:none}
+</style>
+<script id="azPerfJs">
+(function(){
+  var R=document.documentElement,K='azPerf';
+  function want(){
+    try{var v=localStorage.getItem(K);if(v==='0')return false;if(v==='1')return true}catch(e){}
+    var touch=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
+    var mem=navigator.deviceMemory||4,cores=navigator.hardwareConcurrency||4;
+    if(touch)return true;                 /* semua HP: mode lancar */
+    return mem<8||cores<8;                /* PC kentang juga */
+  }
+  function apply(){R.classList.toggle('azPerf',want())}
+  apply();
+  window.azPerf=function(on){try{localStorage.setItem(K,on?'1':'0')}catch(e){}apply()};
+  var t=0,sc=0;
+  addEventListener('scroll',function(){
+    if(!sc){sc=1;R.classList.add('azScr')}
+    clearTimeout(t);t=setTimeout(function(){sc=0;R.classList.remove('azScr')},160);
+  },{passive:true,capture:true});
+})();
 </script>
 </body></html>
