@@ -1620,7 +1620,7 @@ const sec=$('t10');if(!sec)return;
 const mk=(h,c)=>{const d=document.createElement('div');d.className=c;d.innerHTML=h;document.body.appendChild(d);return d};
 const mini=mk('<span class="mzNo">Now Playing</span><div class="mzArt"><img id="mzMa" alt=""></div><div class="mzMeta"><b id="mzMt"></b><small id="mzMs"></small></div><button class="mzB mzIc" id="mzMp" aria-label="Putar atau jeda"></button><button class="mzB mzIc" id="mzMn" aria-label="Berikutnya">'+I.next+'</button>','mzMini mzG');
 const br=mk('<button class="mzB mzC2 mzG mzP mzHm" id="mzHm" aria-label="Beranda">'+I.home+'</button><div class="mzTb mzG" id="mzTb"><div class="mzI2"></div><b>'+I.home+'Beranda</b><b>'+I.lib+'Perpustakaan</b><b>'+I.gear+'Pengaturan</b></div><div class="mzMc mzG" id="mzMc"><span class="mzNo2">Now Playing</span><div class="mzArt"><img id="mzMb" alt=""></div><div class="mzMeta"><b id="mzMu2"></b><small id="mzMv"></small></div><button class="mzB mzIc" id="mzMq" aria-label="Putar atau jeda"></button></div><label class="mzSi mzG" id="mzSi">'+I.search+'<input id="ms" placeholder="Lagu, album, atau artis" enterkeyhint="search" autocomplete="off"><button class="mzB mzX" id="mzX" aria-label="Hapus">'+I.close+'</button></label><button class="mzB mzC2 mzG mzP mzXc" id="mzXc" aria-label="Tutup">'+I.close+'</button><button class="mzB mzC2 mzG mzP mzSs" id="mzSs" aria-label="Cari">'+I.search+'</button>','mzBr');
-const np=mk('<div class="mzSc" id="mzSc"><div class="mzIn"><div class="mzHd" id="mzHd"><button class="mzB mzG mzP" id="mzCl" aria-label="Tutup">'+I.down+'</button><div class="mzGr"></div></div><div class="mzCov"><div><img id="mzCi" alt=""></div></div><div class="mzTi"><img class="mzSa" id="mzSa" alt=""><div><b id="mzT"></b><span id="mzA"></span></div><button class="mzB" id="mzFv" aria-label="Favorit"></button><button class="mzB mzMr" id="mzMr" aria-label="Menu">'+I.dots+'</button></div><div class="mzLw"><div class="mzLh"><span id="mzLt"></span><button class="mzB mzG mzP" id="mzOb">Offset</button></div><div class="mzLyS" id="mzLy"></div><div class="mzOf mzG" id="mzOf"><h4>Lyrics Offset: <span id="mzOv">0ms</span></h4><p>Adjust by:</p><div class="r"><button class="mzB on" data-st="50">50ms</button><button class="mzB" data-st="100">100ms</button><button class="mzB" data-st="200">200ms</button><button class="mzB" data-st="500">500ms</button></div><div class="pm"><button class="mzB" data-d="-1">−</button><button class="mzB" data-d="1">+</button></div><button class="mzB rs" data-d="0">Reset Offset</button></div></div><div class="mzBar" id="mzBar"><div class="mzTr"><div class="mzFl" id="mzFl"></div></div></div><div class="mzTm"><span id="mzC">0:00</span><span id="mzD">0:00</span></div><div class="mzCt"><button class="mzB" id="mzPv" aria-label="Sebelumnya">'+I.prev+'</button><button class="mzB mzPl" id="mzPp" aria-label="Putar atau jeda"></button><button class="mzB" id="mzNx" aria-label="Berikutnya">'+I.next+'</button></div><div class="mzVl">'+I.v0+'<div class="mzBar" id="mzVb"><div class="mzTr"><div class="mzFl" id="mzVf" style="width:100%"></div></div></div>'+I.v1+'</div><div class="mzBt"><button class="mzB mzP" id="mzLb" aria-label="Lirik">'+I.quote+'</button><button class="mzB mzP" data-sh="sh" aria-label="Bagikan">'+I.air+'<span class="azPl">Bagikan</span></button><button class="mzB mzP" id="mzIf" aria-label="Pencipta">'+I.list+'</button></div><div class="mzAc"><button class="mzB mzG mzP" data-sh="wa">'+I.wa+'Status WA</button><button class="mzB mzG mzP" data-sh="yt">'+I.yt+'YouTube</button><button class="mzB mzG mzP" data-sh="cp">'+I.copy+'Salin</button></div><div class="mzCd mzG"><h3>Pencipta</h3><div class="mzTx" id="mc">-</div></div></div></div>','mzNP');
+const np=mk('<div class="mzSc" id="mzSc"><div class="mzIn"><div class="mzHd" id="mzHd"><button class="mzB mzG mzP" id="mzCl" aria-label="Tutup">'+I.down+'</button><div class="mzGr"></div></div><div class="mzCov"><div><img id="mzCi" alt=""></div></div><div class="mzTi"><img class="mzSa" id="mzSa" alt=""><div><b id="mzT"></b><span id="mzA"></span></div><button class="mzB" id="mzFv" aria-label="Favorit"></button><button class="mzB mzMr" id="mzMr" aria-label="Menu">'+I.dots+'</button></div><div class="mzLw"><div class="mzLh"><span id="mzLt"></span><button class="mzB mzG mzP" id="mzOb">Offset</button></div><div class="mzLyS" id="mzLy"></div><div class="mzOf mzG" id="mzOf"><h4>Lyrics Offset: <span id="mzOv">0ms</span></h4><p>Adjust by:</p><div class="r"><button class="mzB on" data-st="50">50ms</button><button class="mzB" data-st="100">100ms</button><button class="mzB" data-st="200">200ms</button><button class="mzB" data-st="500">500ms</button></div><div class="pm"><button class="mzB" data-d="-1">−</button><button class="mzB" data-d="1">+</button></div><button class="mzB rs" data-d="0">Reset Offset</button></div></div><div class="mzBar" id="mzBar"><div class="mzTr"><div class="mzFl" id="mzFl"></div></div></div><div class="mzTm"><span id="mzC">0:00</span><span id="mzD">0:00</span></div><div class="mzCt"><button class="mzB" id="mzPv" aria-label="Sebelumnya">'+I.prev+'</button><button class="mzB mzPl" id="mzPp" aria-label="Putar atau jeda"></button><button class="mzB" id="mzNx" aria-label="Berikutnya">'+I.next+'</button></div><div class="mzVl">'+I.v0+'<div class="mzBar" id="mzVb"><div class="mzTr"><div class="mzFl" id="mzVf" style="width:100%"></div></div></div>'+I.v1+'</div><div class="mzBt"><button class="mzB mzP" id="mzLb" aria-label="Lirik">'+I.quote+'</button><button class="mzB mzP" data-sh="sh" aria-label="Bagikan">'+I.air+'<span class="azPl">Bagikan</span></button><button class="mzB mzP" id="mzIf" aria-label="Pencipta">'+I.list+'</button></div><div class="mzAc"><button class="mzB mzG mzP" data-sh="wa">'+I.wa+'Status WA</button><button class="mzB mzG mzP" data-sh="yt">'+I.yt+'YouTube</button><button class="mzB mzG mzP" data-sh="dl"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/></svg>Download</button><button class="mzB mzG mzP" data-sh="cp">'+I.copy+'Salin</button></div><div class="mzCd mzG"><h3>Pencipta</h3><div class="mzTx" id="mc">-</div></div></div></div>','mzNP');
 sec.innerHTML='<div class="mzPg" id="pgH"></div><div class="mzPg" id="pgL"></div><div class="mzPg" id="pgS"></div><div class="mzPg" id="pgC"><div class="mzMode mzG" id="mzMode"><div class="mzI"></div><b>Aurora</b><b>Perpustakaan</b></div><div class="mzHdr mzCh"><h1>Cari</h1></div><p class="mzCap m" id="l10"></p><div id="mzSg"></div><div class="mzSeg mzHid" id="mzSeg"><div class="mzI"></div><b>Top Results</b><b>Artists</b><b>Albums</b><b>Songs</b><b>Featured playlists</b></div><div id="mr"></div></div>';
 $('mzMp').innerHTML=$('mzPp').innerHTML=$('mzMq').innerHTML=I.play;
 const ms=$('ms'),si=$('mzSi'),mr=$('mr'),P={home:'pgH',lib:'pgL',set:'pgS',cari:'pgC'};
@@ -1656,6 +1656,7 @@ const uq=(k,L)=>{const m=new Map;L.forEach(s=>{if(s[k]&&s.al!='Audius'&&!m.has(s
 /* ===== halaman ===== */
 const PL=[['Hits Indonesia',0],['Galau Time',4],['Santai',8]],lq=()=>(S.tr&&S.tr.length)?S.tr:FB;
 function home(){const H=hs(),L=lq();S.pls=PL.map(x=>L.slice(x[1],x[1]+4));let h='<div class="mzHdr"><h1>Dengarkan Sekarang</h1><button class="mzB mzPf" data-act="prof" aria-label="Profil">'+I.user+'</button></div>';
+h+='<div class="azMq" aria-label="Selamat datang di AuroraMusik"><div class="azMqV"><div class="azMqT">'+('<div class="azMqG">'+'<span>SELAMAT DATANG DI AURORAMUSIK</span><i>✦</i>'.repeat(4)+'</div>').repeat(2)+'</div></div></div>';
 if(H.length&&tgv('hhs',1))h+='<h3 class="mzH2" data-lb="h">Sesi Terakhir <i>›</i></h3><div class="mzSl">'+H.slice(0,10).map(s=>card(s,1)).join('')+'</div>';
 h+='<div class="azSb" data-act="srch" role="button" aria-label="Cari lagu">'+I.search+'<span>Cari lagu, album, atau artis</span></div>';
 h+='<h3 class="mzH2">Quick picks</h3><div class="mzQp">'+L.slice(12,28).map(row).join('')+'</div>'+(tgv('hpl',1)?'<h3 class="mzH2">Trending community playlists <i>›</i></h3><div class="mzSl">'+PL.map((x,i)=>plc(x[0],S.pls[i],i)).join('')+'</div>':'')+'<h3 class="mzH2">Trending songs for you</h3><div id="mzBot">'+[...L.slice(0,12),...L.slice(28)].slice(0,80).concat(S.more||[]).map(row).join('')+'</div><div class="mzMore" id="mzMore"><i></i>Memuat lagu lainnya...</div>';
@@ -1890,7 +1891,7 @@ function favT(s){let F=fav();const had=isF(s);if(had)F=F.filter(x=>fk(x)!=fk(s))
 $('mzFv').onclick=()=>{if(S.song){const f=favT(S.song);$('mzFv').innerHTML=window.azStar?window.azStar(f):(f?I.chkc:I.plusc)}};
 /* ===== bagikan ===== */
 async function share(w){const s=S.song;if(!s)return;const k=YT(s.t+' '+(s.a||'')),tx='🎵 '+s.t+' - '+(s.a||'')+'\n'+k;
-if(w=='wa'){const fb=()=>open('https://wa.me/?text='+encodeURIComponent(tx));return window.__azWa?window.__azWa(s,tx,fb):fb()}if(w=='cp')return typeof cp==='function'?cp(tx):navigator.clipboard.writeText(tx).then(()=>tt('Disalin'));if(w=='yt')return open(k);if(w=='sp')return open('https://open.spotify.com/search/'+encodeURIComponent(s.t+' '+(s.a||'')));
+if(w=='dl')return window.__azDl&&window.__azDl(s);if(w=='wa'){const fb=()=>open('https://wa.me/?text='+encodeURIComponent(tx));return window.__azWa?window.__azWa(s,tx,fb):fb()}if(w=='cp')return typeof cp==='function'?cp(tx):navigator.clipboard.writeText(tx).then(()=>tt('Disalin'));if(w=='yt')return open(k);if(w=='sp')return open('https://open.spotify.com/search/'+encodeURIComponent(s.t+' '+(s.a||'')));
 try{if(s.au){const b=await(await fetch(s.au)).blob(),f=new File([b],s.t.replace(/[^\w ]/g,'')+(s.full?'.mp3':'.m4a'),{type:b.type||'audio/mp4'});if(navigator.canShare&&navigator.canShare({files:[f]}))return await navigator.share({files:[f],title:s.t,text:tx})}}catch(e){}
 navigator.share?navigator.share({title:s.t,text:tx}).catch(()=>0):share('cp')}
 /* ===== event ===== */
@@ -2040,7 +2041,7 @@ srow(zz('Lokasi Cadangan Otomatis','Auto Backup Location'),zz('Penyimpanan brows
 const zAB=()=>zsb(zz('Tentang','About'))+'<div class="mzCd2">'+
 srow(zz('Versi','Version'),zz('Ketuk untuk memeriksa pembaruan ('+ZV+')','Tap to check for updates ('+ZV+')'),0,'data-act="abt"')+
 srow(zz('Bagikan Aplikasi','Share App'),zz('Beri tahu teman Anda tentang kami','Let your friends know about us'),0,'data-act="shr"')+
-srow(zz('Developer','Developer'),'Anzx',0,'')+srow(zz('Donasi via DANA / GoPay','Donate via DANA / GoPay'),zz('+6288985980014 \u2022 Ketuk untuk menyalin nomor','+6288985980014 \u2022 Tap to copy the number'),'<span class="mzLk" data-act="dcp">'+zz('Salin','Copy')+'</span>','data-act="dcp"')+
+srow(zz('Developer','Developer'),'Anzx',0,'')+srow(zz('Donasi via DANA / GoPay','Donate via DANA / GoPay'),zz('+6288985980014 \u2022 Ketuk untuk QRIS & nomor','+6288985980014 \u2022 Tap for QRIS & numbers'),'<span class="mzLk" data-act="dcp">'+zz('Donasi','Donate')+'</span>','data-act="dcp"')+
 srow(zz('Hubungi Kami','Contact Us'),zz('WhatsApp +6288985980014','WhatsApp +6288985980014'),0,'data-act="cts"')+'</div>';
 
 window.__mzSet=(sp,pg)=>{const M={ui:zUI,uibg:zBG,uilg:zLG,uimd:zMD,mus:zMU,lain:zOT,bak:zBK,tentang:zAB};if(!M[sp])return false;pg.innerHTML=M[sp]();return true};
@@ -2073,8 +2074,8 @@ abr:()=>{const s=zSnap();if(!s)return;zRestore(s.d);tt(zz('Data dipulihkan','Dat
 abx:()=>{try{localStorage.removeItem('nxMzABs')}catch(e){}tt(zz('Cadangan otomatis direset','Auto backup reset'));setp()},
 abt:()=>tt('Aurora '+ZV+' \u2022 by Anzx \u2022 iTunes, Audius, LRCLIB'),
 tip:()=>{if(ZDON.url)return window.open(ZDON.url,'_blank');tt(zz('Info donasi belum diatur','Donation info is not set yet'))},
-dcp:a=>{if(!ZDON.upi)return tt(zz('Info donasi belum diatur','Donation info is not set yet'));try{navigator.clipboard.writeText(ZDON.upi).then(()=>tt(zz('Nomor DANA / GoPay disalin: ','DANA / GoPay number copied: ')+ZDON.upi))}catch(e){}},
-cts:()=>{if(ZKON)return window.open(ZKON,'_blank');tt(zz('Kontak belum diatur','Contact is not set yet'))},
+dcp:a=>{window.__azDon&&window.__azDon()},
+ cts:()=>{if(ZKON)return window.open(ZKON,'_blank');tt(zz('Kontak belum diatur','Contact is not set yet'))},
 plus:a=>menu(a,[{t:zz('Buat Daftar Putar','Create Playlist'),fn:()=>zNewPl()},{t:zz('Tambah Lagu Lokal','Add Local Songs'),fn:zPick}]),
 plnewb:()=>zNewPl(),
 plo:a=>{S.plo=+a.dataset.i;lib();scrollTo(0,0)},
@@ -2436,7 +2437,11 @@ const tx=async(m,f)=>{const d=await idb();return new Promise((r,j)=>{const t=d.t
 const offAll=()=>tx('readonly',s=>s.getAll()).then(l=>(l||[]).forEach(x=>OFF[x.u]=URL.createObjectURL(x.b))).catch(()=>{});offAll();
 if(AU){const d=Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype,'src');Object.defineProperty(AU,'src',{get(){return d.get.call(this)},set(v){d.set.call(this,OFF[v]||v)},configurable:true})}
 const blob=async u=>{const r=await fetch(u);if(!r.ok)throw 0;return r.blob()};
-const dl=async s=>{toast('Mengunduh...');try{const b=await blob(s.au),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(s.t+' - '+(s.a||'')).replace(/[\\\/:*?"<>|]/g,'')+'.'+((s.au.match(/\.(\w{2,4})(\?|$)/)||[,'mp3'])[1]);a.click();toast('Download dimulai')}catch(e){window.open(s.au,'_blank');toast('Dibuka di tab baru, tahan untuk simpan')}};
+const dl=async s=>{if(window.__azDlB)return;window.__azDlB=1;try{toast('Mengunduh lagu…');let b=null;try{b=OFF[s.au]?await blob(OFF[s.au]):await window.__azPB(s.au)}catch(e){}
+if(!b){window.open(s.au,'_blank');toast('Tidak bisa diunduh langsung, dibuka lewat browser');return}
+const ty=b.type||'',u0=s.au.split('?')[0].split('.').pop().toLowerCase(),ext=/mp4|m4a|aac/.test(ty)?'m4a':/ogg|opus/.test(ty)?'ogg':/webm/.test(ty)?'webm':/mpeg|mp3/.test(ty)?'mp3':(['mp3','m4a','aac','ogg','wav','flac','webm'].indexOf(u0)>-1?u0:'mp3'),
+nm=((s.t||'lagu')+' - '+(s.a||'')).replace(/[<>:"/|?*]+/g,' ').replace(/ +/g,' ').trim()+'.'+ext,f=new File([b],nm,{type:ty||'audio/mpeg'}),url=URL.createObjectURL(f),a=document.createElement('a');
+a.href=url;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);toast('Download dimulai: '+nm)}catch(e){toast('Gagal mengunduh lagu')}finally{window.__azDlB=0}};window.__azDl=dl;
 const offT=async s=>{try{if(OFF[s.au]){await tx('readwrite',x=>x.delete(s.au));delete OFF[s.au];return toast('Dihapus dari offline')}toast('Menyimpan offline...');const b=await blob(s.au);await tx('readwrite',x=>x.put({u:s.au,t:s.t,a:s.a||'',b}));OFF[s.au]=URL.createObjectURL(b);toast('Lagu ini sekarang bisa didengar offline ✓')}catch(e){toast('Gagal menyimpan offline')}};
 const ox=window.__mzXtra;window.__mzXtra=s=>[...(ox?ox(s):[]),...(s&&s.au&&!s.loc?[{t:'Download lagu',fn:()=>dl(s)},{t:OFF[s.au]?'Hapus dari offline':'Lagu ini offline',fn:()=>offT(s)}]:[])];
 const offList=async()=>{const l=await tx('readonly',s=>s.getAll())||[],d=document.createElement('div');d.id='nxVp';d.innerHTML='<div class="nxBx"><h1>Lagu Offline</h1>'+(l.length?l.map((x,i)=>'<div class="nxAcR"><span data-p="'+i+'" style="flex:1;cursor:pointer"><b>▶ '+x.t.replace(/</g,'&lt;')+'</b><small>'+x.a.replace(/</g,'&lt;')+'</small></span><span data-d="'+i+'" style="cursor:pointer">🗑</span></div>').join(''):'<p>Belum ada lagu offline. Buka titik 3 di samping lagu lalu pilih "Lagu ini offline".</p>')+'<button class="nxBt g2" id="nxCl">Tutup</button></div>';document.body.appendChild(d);d.querySelector('#nxCl').onclick=()=>d.remove();
@@ -2740,8 +2745,8 @@ const A=window.mzAudio;if(!A)return;
 const T=m=>{try{toast(m)}catch(e){}},RATE=.85,LS=localStorage;
 let mode='b';try{mode=LS.getItem('nxMzfxm')||'b'}catch(e){}if(!/^[bsupq]$/.test(mode))mode='b';
 let ctx=null,wet=null,dry=null,busy=0,lmN=null,sd=null;
-let bm=({p:'p',q:'x'})[mode]||'n';let bsh=null,bpk=null,pre=null;const needs=()=>mode=='u'||bm!='n';
-const NM={b:'Normal',s:'Slowed',u:'Super Slowed',p:'Bas',q:'Super Bas'},RT={s:.85,u:.7};
+let bm='n';try{bm=LS.getItem('nxMzbass')||'n'}catch(e){}if(!/^[npx]$/.test(bm))bm='n';let bsh=null,bpk=null,pre=null;const needs=()=>mode=='u'||bm!='n';
+const NM={b:'Normal',s:'Slowed',u:'Super Slowed'},RT={s:.85,u:.7};
 function applyRate(){const r=RT[mode]||1;A.defaultPlaybackRate=r;A.playbackRate=r;['preservesPitch','webkitPreservesPitch','mozPreservesPitch'].forEach(k=>{if(k in A)A[k]=(r==1)})}
 /* src setter: reverb butuh crossOrigin supaya audio bisa dialirkan lewat Web Audio */
 const d0=Object.getOwnPropertyDescriptor(A,'src')||Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype,'src');
@@ -2750,24 +2755,35 @@ function irBuf(c){const n=c.sampleRate*2.8|0,b=c.createBuffer(2,n,c.sampleRate);
 function build(){const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();ctx.onstatechange=()=>{if(ctx.state==='interrupted'&&!A.paused)A.pause()};const src=ctx.createMediaElementSource(A);dry=ctx.createGain();wet=ctx.createGain();const cv=ctx.createConvolver();cv.buffer=irBuf(ctx);const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3800;
 pre=ctx.createGain();bsh=ctx.createBiquadFilter();bsh.type='lowshelf';bsh.frequency.value=95;bpk=ctx.createBiquadFilter();bpk.type='peaking';bpk.frequency.value=58;bpk.Q.value=1.1;const lm=ctx.createDynamicsCompressor();lm.threshold.value=-8;lm.knee.value=10;lm.ratio.value=14;lm.attack.value=.004;lm.release.value=.2;
 src.connect(pre);pre.connect(bsh);bsh.connect(bpk);bpk.connect(dry);bpk.connect(cv);dry.connect(lm);cv.connect(lp);lp.connect(wet);wet.connect(lm);lm.connect(ctx.destination);lmN=lm;wet.gain.value=0;dry.gain.value=1;setWet()}
-function setBass(){if(!ctx||!bsh)return;const t=ctx.currentTime,g={n:[0,0,1],p:[6,3,.9],x:[12,6,.72]}[bm];bsh.gain.setTargetAtTime(g[0],t,.12);bpk.gain.setTargetAtTime(g[1],t,.12);pre.gain.setTargetAtTime(g[2],t,.12)}
+function setBass(){if(!ctx||!bsh)return;const t=ctx.currentTime,g={n:[0,0,1],p:[9,5,.85],x:[16,8,.68]}[bm];bsh.gain.setTargetAtTime(g[0],t,.12);bpk.gain.setTargetAtTime(g[1],t,.12);pre.gain.setTargetAtTime(g[2],t,.12)}
 function setWet(){if(!ctx)return;const t=ctx.currentTime,r=mode=='u';wet.gain.setTargetAtTime(r?.55:0,t,.15);dry.gain.setTargetAtTime(r?.8:1,t,.15);setBass()}
 async function corsOK(u){if(/^(blob|data):/.test(u))return true;const c=new AbortController;try{const r=await fetch(u,{mode:'cors',signal:c.signal,cache:'no-store'});c.abort();return r.ok}catch(e){return false}}
 async function ensure(){if(ctx){if(ctx.state=='suspended')ctx.resume().catch(()=>0);return true}
 const u=A.getAttribute('src')?A.src:'';
-if(u&&A.crossOrigin!=='anonymous'){if(!await corsOK(u))return false;const t=A.currentTime,was=!A.paused;A.crossOrigin='anonymous';A.src=u;if(t>.2)A.addEventListener('loadedmetadata',()=>{try{A.currentTime=t}catch(e){}},{once:true});if(was)A.play().catch(()=>0)}
+if(u&&A.crossOrigin!=='anonymous'){let u2=u;if(!await corsOK(u)){const pb=await window.__azPB(u);if(!pb)return false;u2=URL.createObjectURL(pb)}const t=A.currentTime,was=!A.paused;A.crossOrigin='anonymous';A.src=u2;if(t>.2)A.addEventListener('loadedmetadata',()=>{try{A.currentTime=t}catch(e){}},{once:true});if(was)A.play().catch(()=>0)}
 else if(!u)A.crossOrigin='anonymous';
 try{build();ctx.resume().catch(()=>0);return true}catch(e){ctx=null;return false}}
 const row=document.createElement('div'),lab=document.createElement('div');
-lab.className='azFxT';lab.textContent='Mode';
-row.className='azFx azMode';row.innerHTML='<b data-m="b">Normal</b><b data-m="s">Slowed</b><b data-m="u">Super Slowed</b><b data-m="p">Bas</b><b data-m="q">Super Bas</b>';
+lab.className='azFxT';lab.textContent='Mode Slowed';
+row.className='azFx azMode';row.innerHTML='<b data-m="b">Normal</b><b data-m="s">Slowed</b><b data-m="u">Super Slowed</b>';
 const bt=document.querySelector('.mzNP .mzBt');if(bt){bt.parentNode.insertBefore(lab,bt);bt.parentNode.insertBefore(row,bt)}
-const paint=()=>row.querySelectorAll('b').forEach(b=>b.classList.toggle('on',b.dataset.m==mode)),paint2=()=>{};
-async function setMode(m){mode=m;bm=({p:'p',q:'x'})[m]||'n';try{LS.setItem('nxMzfxm',m)}catch(e){}paint();applyRate();
-if(needs()){if(busy)return;busy=1;const ok=await ensure();busy=0;if(!ok){mode=m=='u'?'s':'b';bm='n';paint();applyRate();T('Efek ini tidak didukung untuk lagu ini');return}}
+const lab2=document.createElement('div'),row2=document.createElement('div');lab2.className='azFxT';lab2.textContent='Mode Bas';row2.className='azFx azMode';row2.innerHTML='<b data-k="n">Normal</b><b data-k="p">Bas</b><b data-k="x">Super Bas</b>';
+if(bt){bt.parentNode.insertBefore(lab2,bt);bt.parentNode.insertBefore(row2,bt)}
+const BN={n:'Normal',p:'Bas',x:'Super Bas'};
+const mkTh=r=>{const t=document.createElement('i');t.className='azTh nt';r.insertBefore(t,r.firstChild);return t},th1=mkTh(row),th2=mkTh(row2);
+const place=(r,t)=>{const b=r.querySelector('b.on');if(!b||!b.offsetWidth)return;t.style.width=b.offsetWidth+'px';t.style.transform='translateX('+b.offsetLeft+'px)';requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.remove('nt')))};
+const paint=()=>{row.querySelectorAll('b').forEach(b=>b.classList.toggle('on',b.dataset.m==mode));place(row,th1)},paint2=()=>{row2.querySelectorAll('b').forEach(b=>b.classList.toggle('on',b.dataset.k==bm));place(row2,th2)};
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>{th1.classList.add('nt');th2.classList.add('nt');place(row,th1);place(row2,th2)});ro.observe(row);ro.observe(row2)}
+async function setMode(m){mode=m;try{LS.setItem('nxMzfxm',m)}catch(e){}paint();applyRate();
+if(m=='u'){if(busy)return;busy=1;const ok=await ensure();busy=0;if(!ok){mode='s';paint();applyRate();T('Reverb tidak bisa untuk lagu ini, memakai Slowed');return}}
 else if(ctx&&ctx.state=='suspended')ctx.resume().catch(()=>0);
-setWet();T('Mode: '+NM[mode])}
+setWet();T('Slowed: '+NM[mode])}
 row.addEventListener('click',e=>{const b=e.target.closest('b');if(b&&b.dataset.m!==mode)setMode(b.dataset.m)});
+async function setBM(k){bm=k;try{LS.setItem('nxMzbass',k)}catch(e){}paint2();
+if(k!='n'){if(busy)return;busy=1;const ok=await ensure();busy=0;if(!ok){bm='n';try{LS.setItem('nxMzbass','n')}catch(e){}paint2();T('Bas tidak bisa untuk lagu ini');return}}
+else if(ctx&&ctx.state=='suspended')ctx.resume().catch(()=>0);
+setBass();T('Bas: '+BN[bm])}
+row2.addEventListener('click',e=>{const b=e.target.closest('b');if(b&&b.dataset.k!==bm)setBM(b.dataset.k)});
 window.__azStream=async function(){if(!(await ensure())||!lmN)return null;if(!sd){sd=ctx.createMediaStreamDestination();lmN.connect(sd)}return sd.stream};
 ['loadedmetadata','play'].forEach(n=>A.addEventListener(n,applyRate));
 A.addEventListener('playing',()=>{if(needs()&&!ctx&&!busy){busy=1;ensure().then(ok=>{busy=0;if(ok)setWet()})}else if(ctx&&ctx.state=='suspended')ctx.resume().catch(()=>0)});
@@ -3771,8 +3787,98 @@ window.azStar=function(on){
 </script>
 <style id="azmode">
 .azMode b{font-size:10.5px;padding:10px 2px;white-space:nowrap}
+html body .azFx .azTh:not(#az){position:absolute;left:0;top:4px;bottom:4px;width:0;border-radius:999px;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.12));box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.16),0 4px 14px rgba(0,0,0,.28);transition:transform .5s cubic-bezier(.22,1,.36,1),width .5s cubic-bezier(.22,1,.36,1)}
+html body .azFx .azTh.nt:not(#az){transition:none}
+html body .azFx b.on:not(#az){background:none!important;box-shadow:none!important}
+html body .azFx b.azPop:not(#az){animation:none!important}
+html body .azFx:not(#az){transition:background .5s,box-shadow .5s,opacity .5s}
+html body .azFx b:not(#az){transition:color .4s,transform .35s cubic-bezier(.22,1,.36,1)}
+html body .azFxT:not(#az){transition:color .5s,opacity .5s}
+@keyframes azIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+html body .azFx:not(#az),html body .azFxT:not(#az){animation:azIn .6s cubic-bezier(.22,1,.36,1) both}
+html body .azFx .azTh:not(#az){will-change:transform,width}
+html body .mzB.mzG:not(#az){transition:transform .3s cubic-bezier(.22,1,.36,1),background .45s,color .45s,border-color .45s,box-shadow .45s}
+html body .azFx b:active:not(#az){transform:scale(.95)!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none!important}
+.azMq{position:relative;display:flex;align-items:center;height:46px;margin:0 0 12px;border-radius:999px;overflow:hidden;background:radial-gradient(130% 160% at 10% -40%,rgba(255,255,255,.22),rgba(255,255,255,0) 55%),linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),inset 0 1.5px 1px -.6px rgba(255,255,255,.5),0 8px 24px rgba(0,0,0,.25);transition:background .5s,box-shadow .5s;animation:azIn .6s cubic-bezier(.22,1,.36,1) both}
+.azMqV{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
+.azMqT{display:flex;width:max-content;animation:azMqRun 26s linear infinite;will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.azMqG{display:flex;align-items:center;flex:none}
+.azMqG span{padding:0 14px;font-weight:800;font-size:14px;letter-spacing:.22em;white-space:nowrap;background:linear-gradient(90deg,color-mix(in srgb,var(--a,#ff4d94) 55%,#fff),#fff,color-mix(in srgb,var(--b,var(--a,#ff4d94)) 55%,#fff),color-mix(in srgb,var(--a,#ff4d94) 55%,#fff));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.azMqG i{font-style:normal;font-size:13px;color:var(--a,#ff4d94);}
+@keyframes azMqRun{to{transform:translate3d(-50%,0,0)}}
+@keyframes azMqSh{to{background-position:300% 0}}
+@keyframes azMqTw{50%{transform:scale(1.4) rotate(20deg)}}
+body[data-lt=on] .azMq{background:radial-gradient(130% 160% at 10% -40%,rgba(255,255,255,.9),rgba(255,255,255,0) 55%),rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1.5px 1px -.6px #fff,0 8px 22px rgba(20,30,60,.12)}
+body[data-lt=on] .azMqG span{background-image:linear-gradient(90deg,color-mix(in srgb,var(--a,#ff4d94) 82%,#000),color-mix(in srgb,var(--b,var(--a,#ff4d94)) 60%,#000),color-mix(in srgb,var(--a,#ff4d94) 82%,#000));filter:none}
+@media (prefers-reduced-motion:reduce){.azMqT,.azMqG span,.azMqG i{animation:none}}
+#azDon{position:fixed;inset:0;z-index:99999;pointer-events:none}
+#azDon .azDb{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;transition:opacity .45s ease}
+#azDon .azDs{position:absolute;left:0;right:0;bottom:0;max-height:92%;overflow:auto;padding:10px 20px calc(22px + env(safe-area-inset-bottom,0px));border-radius:30px 30px 0 0;text-align:center;color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02)),rgba(24,24,30,.92);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.25),0 -20px 60px rgba(0,0,0,.45);will-change:transform;transform:translate3d(0,105%,0);transition:transform .55s cubic-bezier(.22,1,.36,1),background .5s,color .5s}
+#azDon.on{pointer-events:auto}#azDon.on .azDb{opacity:1}#azDon.on .azDs{transform:translate3d(0,0,0)}
+#azDon .azDh{width:42px;height:5px;border-radius:9px;background:rgba(255,255,255,.3);margin:0 auto 14px}
+#azDon h3{margin:0;font-size:21px;font-weight:800}#azDon p{margin:4px 0 14px;font-size:13.5px;opacity:.65}
+#azDon .azDq{width:min(250px,66vw);aspect-ratio:1;margin:0 auto 16px;padding:12px;border-radius:24px;background:#fff;box-shadow:0 14px 36px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;color:#222}
+#azDon .azDq img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+#azDon .azDe b{display:block;font-size:30px;letter-spacing:.12em}#azDon .azDe small{opacity:.6;font-size:12px}
+#azDon .azDr{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 10px;border-radius:20px;text-align:left;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);transition:background .5s}
+html body #azDon .azDr .azDi:not(#az){flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font:800 11.5px/1 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;background:var(--c);margin:0;padding:0;position:static;letter-spacing:.02em;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 12px rgba(0,0,0,.25)}
+html body #azDon .azDr .azDt:not(#az){flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;margin:0;padding:0;position:static;background:none}
+html body #azDon .azDr .azDn:not(#az){display:block;margin:0;padding:0;position:static;background:none;transform:none;opacity:1;font:800 16px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:.01em;color:inherit;text-shadow:none}
+html body #azDon .azDr .azDm:not(#az){display:block;margin:0;padding:0;position:static;background:none;transform:none;font:600 15px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:.05em;color:inherit;opacity:.72;text-shadow:none;-webkit-user-select:text;user-select:text}
+#azDon button{border:0;font:inherit;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .3s cubic-bezier(.22,1,.36,1),background .4s,color .4s}
+html body #azDon .azDr button:not(#az){flex:0 0 auto!important;width:auto!important;min-width:84px;height:40px!important;margin:0!important;padding:0 18px!important;position:static!important;inset:auto!important;transform:none;display:inline-flex!important;align-items:center;justify-content:center;border:0;border-radius:999px;font:700 14px/1 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:0;background:var(--a,#ff4d94);color:var(--on,#fff);box-shadow:none;white-space:nowrap}
+html body #azDon .azDr button:active:not(#az){transform:scale(.94)}
+html body #azDon .azDr:not(#az){position:relative;overflow:hidden;flex-wrap:nowrap;width:auto;box-sizing:border-box}
+#azDon button:active{transform:scale(.94)}
+#azDon .azDx{width:100%;margin-top:4px;padding:14px;border-radius:999px;color:inherit;background:rgba(255,255,255,.1)}
+body[data-lt=on] #azDon .azDs{color:#14161f;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.7)),rgba(255,255,255,.8);box-shadow:inset 0 1.5px 0 #fff,0 -20px 60px rgba(20,30,60,.25)}
+body[data-lt=on] #azDon .azDh{background:rgba(0,0,0,.18)}
+body[data-lt=on] #azDon .azDr{background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+body[data-lt=on] #azDon .azDx{background:rgba(0,0,0,.07)}
+/* performa: navigasi tidak patah-patah */
+html body :is(#mr,.mzPg)>.mzRow:not(#az),html body #mzBot>.mzRow:not(#az),html body .mzQp>.mzRow:not(#az){-webkit-backdrop-filter:none!important;backdrop-filter:none!important;content-visibility:auto;contain-intrinsic-size:auto 72px;animation-delay:min(calc(var(--d,0)*34ms),260ms)}
+html body .mzPg.on:not(#az){will-change:transform,opacity}
+html body .mzSl:not(#az){contain:layout paint;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+html body .mzSl img:not(#az),html body .mzRow img:not(#az){transform:translateZ(0)}
+/* api streak harian */
+html body .azFl:not(#az){display:inline-flex;align-items:center;gap:5px;height:38px;padding:0 13px 0 9px;margin:0 8px 0 auto;border-radius:999px;flex:none;cursor:pointer;position:relative;box-sizing:border-box;font:800 15px/1 'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:0;color:inherit;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 6px 18px rgba(0,0,0,.25),0 0 18px var(--fg);-webkit-tap-highlight-color:transparent;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .5s,background .5s}
+html body .azFl:active:not(#az){transform:scale(.94)}
+html body .azFl svg:not(#az){width:22px;height:22px;flex:none;display:block;transform-origin:50% 90%;animation:azFk 1.9s ease-in-out infinite;will-change:transform}
+html body .azFl .o{fill:var(--f1);transition:fill .6s}html body .azFl .i{fill:var(--f2);transition:fill .6s}
+@keyframes azFk{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.06,1.1) rotate(-3deg)}}
+.azFl[data-t="1"]{--f1:#FF9800;--f2:#FFD54F;--fg:rgba(255,152,0,.22)}
+.azFl[data-t="2"]{--f1:#FF6D00;--f2:#FFB300;--fg:rgba(255,109,0,.55)}
+.azFl[data-t="3"]{--f1:#F44336;--f2:#FF8A65;--fg:rgba(244,67,54,.32)}
+.azFl[data-t="4"]{--f1:#D50000;--f2:#FF5722;--fg:rgba(213,0,0,.6)}
+.azFl[data-t="5"]{--f1:#8E24FF;--f2:#E67CFF;--fg:rgba(142,36,255,.6)}
+body[data-lt=on] .azFl:not(#az){background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(0,0,0,.06),0 6px 16px rgba(20,30,60,.12),0 0 16px var(--fg)}
+#azTp{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));z-index:99998;max-width:84vw;padding:12px 18px;border-radius:18px;text-align:center;font:700 13.5px/1.35 'Plus Jakarta Sans',system-ui,sans-serif;color:#fff;background:rgba(24,24,30,.94);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 14px 36px rgba(0,0,0,.4);opacity:0;transform:translate3d(-50%,-10px,0);transition:opacity .4s ease,transform .5s cubic-bezier(.22,1,.36,1);pointer-events:none}
+#azTp.on{opacity:1;transform:translate3d(-50%,0,0)}
+body[data-lt=on] #azTp{color:#14161f;background:rgba(255,255,255,.96)}
+@media (prefers-reduced-motion:reduce){.azFl svg{animation:none}}
 </style>
 <script id="azwa-js">
+window.__azPB=async function(u){const ok=b=>b&&b.size>2e4&&!/html|json|text/.test(b.type||'');for(const q of ['','https://corsproxy.io/?url=','https://api.allorigins.win/raw?url=','https://api.codetabs.com/v1/proxy?quest=','https://thingproxy.freeboard.io/fetch/']){try{const c=new AbortController(),t=setTimeout(()=>c.abort(),30000),r=await fetch(q?(q.indexOf('=')>0?q+encodeURIComponent(u):q+u):u,{signal:c.signal});if(r.ok){const b=await r.blob();clearTimeout(t);if(ok(b))return b}clearTimeout(t)}catch(e){}}return null};
+window.__azDon=function(){if(document.getElementById('azDon'))return;const NUM='088985980014',QR=window.__azQris||'',d=document.createElement('div');d.id='azDon';
+const row=(n,c,l)=>'<div class="azDr" data-n="'+NUM+'"><span class="azDi" style="--c:'+c+'">'+l+'</span><span class="azDt"><span class="azDn">'+n+'</span><span class="azDm">'+NUM+'</span></span><button type="button">Salin</button></div>';
+d.innerHTML='<div class="azDb"></div><div class="azDs"><div class="azDh"></div><h3>Dukung Aurora</h3><p>Donasi berapa pun sangat berarti</p>'+row('DANA','#118EEA','DANA')+row('GoPay','#00AED6','gopay')+'<button type="button" class="azDx">Tutup</button></div>';
+document.body.appendChild(d);requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('on')));
+const close=()=>{d.classList.remove('on');setTimeout(()=>d.remove(),600)};
+const cp=t=>{try{return navigator.clipboard.writeText(t)}catch(e){return Promise.reject(e)}};
+d.addEventListener('click',e=>{if(e.target.classList.contains('azDb')||e.target.classList.contains('azDx'))return close();
+const b=e.target.closest('.azDr button');if(!b)return;const n=b.parentNode.dataset.n,done=()=>{b.textContent='Tersalin';setTimeout(()=>b.textContent='Salin',1600)};
+cp(n).then(done).catch(()=>{const t=document.createElement('textarea');t.value=n;t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();t.setSelectionRange(0,99);let ok=false;try{ok=document.execCommand('copy')}catch(_){}t.remove();if(ok)return done();const sm=b.parentNode.querySelector('.azDm'),r=document.createRange();r.selectNodeContents(sm);const sl=getSelection();sl.removeAllRanges();sl.addRange(r);b.textContent='Tahan nomor';setTimeout(()=>b.textContent='Salin',2200)})})};
+(function(){let q=0;const fix=()=>{q=0;document.querySelectorAll('.mzPg img:not([data-az]),#mr img:not([data-az])').forEach(i=>{i.dataset.az=1;i.decoding='async';if(!i.loading)i.loading='lazy'})};try{new MutationObserver(()=>{if(!q)q=requestAnimationFrame(fix)}).observe(document.body,{childList:true,subtree:true})}catch(e){}})();
+(function(){const LS=window.localStorage,K='nxMzStreak',dk=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();let n=1;
+try{const now=new Date(),t=dk(now),y=dk(new Date(now.getTime()-864e5));let o={};try{o=JSON.parse(LS.getItem(K)||'{}')}catch(e){}
+if(o.last===t)n=o.n||1;else n=(o.last===y?(o.n||0)+1:1);LS.setItem(K,JSON.stringify({last:t,n:n}))}catch(e){}
+const tier=n=>n>=100?5:n>=30?4:n>=20?3:n>=10?2:1,NM=['','oranye','oranye menyala','merah','merah menyala','ungu'];
+window.__azStreak=()=>n;
+const SV='<svg viewBox="0 0 24 24"><path class="o" d="M12 2c.6 3.2-1.6 4.8-3.3 6.9C7 11 6 12.6 6 14.8 6 18.2 8.7 21 12 21s6-2.8 6-6.2c0-2.3-1-3.8-2.2-5.3-.4 1.3-1.2 2.1-2.1 2.4.5-3.3-.2-6.6-1.7-9.9z"/><path class="i" d="M12 21c-1.9 0-3.4-1.5-3.4-3.4 0-1.9 1.4-2.8 2.1-4.4.4-.8.5-1.6.4-2.4 1.9 1.3 4.3 3.6 4.3 6.8 0 1.9-1.5 3.4-3.4 3.4z"/></svg>';
+let tp=null,tm=0;const tip=()=>{const nx=[10,20,30,100].find(v=>v>n),msg='Hari ke-'+n+' berturut-turut, api '+NM[tier(n)]+(nx?'. '+(nx-n)+' hari lagi menuju api '+NM[tier(nx)]:'. Api ungu aktif!');
+if(!tp){tp=document.createElement('div');tp.id='azTp';document.body.appendChild(tp)}tp.textContent=msg;requestAnimationFrame(()=>tp.classList.add('on'));clearTimeout(tm);tm=setTimeout(()=>tp.classList.remove('on'),3200)};
+const ensure=()=>{const h=document.querySelector('#pgH .mzHdr');if(!h||h.querySelector('.azFl'))return;const f=document.createElement('div');f.className='azFl';f.setAttribute('role','button');f.setAttribute('aria-label','Streak '+n+' hari');f.dataset.t=tier(n);f.innerHTML=SV+'<span>'+n+'</span>';f.addEventListener('click',tip);const pf=h.querySelector('.mzPf');pf?h.insertBefore(f,pf):h.appendChild(f)};
+try{new MutationObserver(ensure).observe(document.body,{childList:true,subtree:true})}catch(e){}ensure()})();
 window.__aud=async function(path,jf){const H=['https://api.audius.co','https://discoveryprovider.audius.co','https://discoveryprovider2.audius.co','https://discoveryprovider3.audius.co'];try{return await Promise.any(H.map(h=>jf(h+path,9000)))}catch(e){return null}};
 /* lagu berhenti saat ada suara lain yang diputar (video / audio lain di halaman) */
 document.addEventListener('play',function(ev){const A=window.mzAudio,t=ev.target;if(!A||t===A||!(t instanceof HTMLMediaElement)||t.muted||window.__azWaB)return;if(!A.paused)A.pause()},true);
@@ -3793,17 +3899,17 @@ const wrap=(t,w,m)=>{const o=[];let l='';for(const x of String(t).split(' ')){co
 const fitT=(t,w)=>{while(t.length>1&&g.measureText(t).width>w)t=t.slice(0,-1);return t};
 function rr(x,y,w,h,r){g.beginPath();g.roundRect?g.roundRect(x,y,w,h,r):g.rect(x,y,w,h)}
 const F='"Plus Jakarta Sans",system-ui,sans-serif';
-function draw(){const t=A.currentTime,k=kAt(t);
-let bg=g.createRadialGradient(W*.2,0,50,W/2,H/2,H);bg.addColorStop(0,acc);bg.addColorStop(.6,'#0a0a10');bg.addColorStop(1,'#000');g.fillStyle=bg;g.fillRect(0,0,W,H);
-g.globalAlpha=.3;g.fillStyle='#000';g.fillRect(0,0,W,H);g.globalAlpha=1;
+function draw(){const t=A.currentTime,k=kAt(t),lt=document.body.dataset.lt=='on',fg=lt?'#14161f':'#fff',fg2=lt?'rgba(20,22,31,.62)':'rgba(255,255,255,.7)',fg3=lt?'rgba(20,22,31,.34)':'rgba(255,255,255,.38)';
+let bg=g.createRadialGradient(W*.2,0,50,W/2,H/2,H);bg.addColorStop(0,acc);bg.addColorStop(.6,lt?'#f4f6f8':'#0a0a10');bg.addColorStop(1,lt?'#ffffff':'#000');g.fillStyle=bg;g.fillRect(0,0,W,H);
+g.globalAlpha=lt?.55:.3;g.fillStyle=lt?'#fff':'#000';g.fillRect(0,0,W,H);g.globalAlpha=1;
 rr(130,120,460,460,36);g.save();g.clip();if(ok)g.drawImage(art,130,120,460,460);else{g.fillStyle=acc;g.fillRect(130,120,460,460)}g.restore();
-g.textAlign='center';g.fillStyle='#fff';g.font='800 38px '+F;g.fillText(fitT(s.t||'',620),W/2,660);
-g.fillStyle='rgba(255,255,255,.7)';g.font='600 28px '+F;g.fillText(fitT(s.a||'',620),W/2,705);
-let y=800;const rows=[[k-1,'rgba(255,255,255,.38)',34],[k,'#fff',50],[k+1,'rgba(255,255,255,.38)',34]];
+g.textAlign='center';g.fillStyle=fg;g.font='800 38px '+F;g.fillText(fitT(s.t||'',620),W/2,660);
+g.fillStyle=fg2;g.font='600 28px '+F;g.fillText(fitT(s.a||'',620),W/2,705);
+let y=800;const rows=[[k-1,fg3,34],[k,fg,50],[k+1,fg3,34]];
 rows.forEach(([i,c,sz])=>{const ln=L[i];if(!ln)return;g.font='800 '+sz+'px '+F;g.fillStyle=c;wrap(ln.x,610,i==k?3:2).forEach(x=>{g.fillText(x,W/2,y);y+=sz*1.3});y+=12});
-if(!L.length){g.fillStyle='#fff';g.font='700 34px '+F;g.fillText('♪',W/2,860)}
-const d=A.duration||0;if(d){g.fillStyle='rgba(255,255,255,.25)';rr(110,1170,500,6,3);g.fill();g.fillStyle='#fff';rr(110,1170,Math.max(6,500*Math.min(1,t/d)),6,3);g.fill()}
-g.fillStyle='rgba(255,255,255,.6)';g.font='700 24px '+F;g.fillText('Aurora',W/2,1230)}
+if(!L.length){g.fillStyle=fg;g.font='700 34px '+F;g.fillText('♪',W/2,860)}
+const d=A.duration||0;if(d){g.fillStyle=lt?'rgba(20,22,31,.15)':'rgba(255,255,255,.25)';rr(110,1170,500,6,3);g.fill();g.fillStyle=fg;rr(110,1170,Math.max(6,500*Math.min(1,t/d)),6,3);g.fill()}
+g.fillStyle=fg2;g.font='700 24px '+F;g.fillText('Aurora',W/2,1230)}
 let st=t0;if(L.length){const k=Math.max(0,kAt(t0)),e=te(t0);st=Math.max(0,L[k].t-((e==null?t0:e)-t0)-.3)}
 A.currentTime=st;draw();
 let as=null;try{as=window.__azStream?await window.__azStream():null}catch(e){}
